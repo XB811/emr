@@ -136,3 +136,18 @@ department
 ## 后端设计
 ![image-20250402134619383](http://qnimg.xblog1.top/typora/image-20250402134619383.png)
 ![image-20250402134159497](http://qnimg.xblog1.top/typora/image-20250402134159497.png)
+## 开发规范
+
+#### git日志提交
+
+- **feat**: 新功能（feature）
+- **fix**: 修复 bug
+- **docs**: 文档变更
+- **style**: 代码风格变动（不影响代码逻辑）
+- **refactor**: 代码重构（既不是新增功能也不是修复bug的代码更改）
+- **perf**: 性能优化
+- **test**: 添加或修改测试
+- **chore**: 杂项（构建过程或辅助工具的变动）
+- **build**: 构建系统或外部依赖项的变更
+- **ci**: 持续集成配置的变更
+- **revert**: 回滚
