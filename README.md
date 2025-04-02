@@ -132,6 +132,6 @@ department
 | delete      | bool |      | false | 是否删除 |
 
 ## 实体关系图
-![image-20250402101931300](http://qnimg.xblog1.top/typora/image-20250402101931300.png)
+![image-20250402101931300](https://qnimg.xblog1.top/typora/image-20250402101931300.png)
 ## 后端设计
-![image-20250402102540412](http://qnimg.xblog1.top/typora/image-20250402102540412.png)
+![image-20250402102540412](https://qnimg.xblog1.top/typora/image-20250402102540412.png)
