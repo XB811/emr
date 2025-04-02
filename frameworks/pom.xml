@@ -7,7 +7,7 @@
         <artifactId>emr-all</artifactId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
-    <artifactId>emr-framework</artifactId>
+    <artifactId>emr-frameworks</artifactId>
 
     <dependencies>
         <dependency>
