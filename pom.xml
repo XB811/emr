@@ -17,8 +17,12 @@
 
 <!--    模块管理-->
     <modules>
-        <!-- 基础架构模块：仅包含公共内容，一个包引入构建所有组件 -->
-        <module>framework</module>
+<!--        基础架构模块：仅包含公共内容，一个包引入构建所有组件 -->
+        <module>frameworks</module>
+<!--        依赖管理-->
+        <module>dependencies</module>
+<!--        业务模块-->
+        <module>services</module>
     </modules>
 
 <!--    版本控制-->
