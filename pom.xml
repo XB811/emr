@@ -104,9 +104,9 @@
                 <version>${spotless-maven-plugin.version}</version>
                 <configuration>
                     <java>
-                        <!--<eclipse>
-                            <file>${maven.multiModuleProjectDirectory}/format/12306_spotless_formatter.xml</file>
-                        </eclipse>-->
+<!--                        <eclipse>-->
+<!--                            <file>${maven.multiModuleProjectDirectory}/format/emr_spotless_formatter.xml</file>-->
+<!--                        </eclipse>-->
                         <licenseHeader>
                             <!-- ${maven.multiModuleProjectDirectory} 爆红属于正常，并不影响编译或者运行，忽略就好 -->
                             <file>${maven.multiModuleProjectDirectory}/format/copyright.txt</file>
