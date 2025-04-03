@@ -8,7 +8,13 @@
         <version>0.0.1-SNAPSHOT</version>
     </parent>
     <artifactId>emr-frameworks</artifactId>
-
+    <packaging>pom</packaging>
+    <modules>
+<!--        基础组件-->
+        <module>base</module>
+<!--        规约组件-->
+        <module>convention</module>
+    </modules>
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
