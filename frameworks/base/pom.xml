@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>top.xblog1.emr</groupId>
+        <artifactId>emr-frameworks</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>emr-base-spring-boot-starter</artifactId>
+    <description>
+        基础组件
+        组件概览
+        1. 定义全局配置常量和过滤器执行顺序。
+        2. 封装 Spring 应用上下文 ApplicationContextHolder。
+        3. 封装 FastJSON 安全模式，客户端可通过配置 fastjson.safa-mode=true 开启安全模式。
+        4. 封装应用初始化事件，通过 Spring ApplicationReadyEvent 进行发布，并保证仅执行一次，ApplicationInitializingEvent。
+        5. 单例对象容器，可避免重复创建对象，方便全局访问。
+    </description>
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+        </dependency>
+    </dependencies>
+
+</project>
