@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>top.xblog1.emr</groupId>
+        <artifactId>emr-frameworks</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+    </parent>
+    <artifactId>emr-convention-spring-boot-starter</artifactId>
+    <description>
+        规约组件
+        组件概述
+        1. 定义异常码抽象和公共异常码。
+        2. 定义抽象异常和客户端、服务端以及远程调用异常。
+        3. 封装分页对象请求参数和返回参数实体。
+        4. 封装公共响应对象。
+    </description>
+</project>
