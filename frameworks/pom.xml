@@ -14,7 +14,10 @@
         <module>base</module>
 <!--        规约组件-->
         <module>convention</module>
+<!--        user组件-->
         <module>bizs</module>
+<!--        设计模式-->
+        <module>designpattern</module>
     </modules>
     <dependencies>
         <dependency>
