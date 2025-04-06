@@ -1,4 +1,4 @@
-package top.xblog1.emr.framework.starter.bases.init;
+package top.xblog1.emr.framework.starter.base.init;
 
 import org.springframework.context.ApplicationEvent;
 

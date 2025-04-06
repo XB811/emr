@@ -1,4 +1,4 @@
-package top.xblog1.emr.framework.starter.bases;
+package top.xblog1.emr.framework.starter.base;
 
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;

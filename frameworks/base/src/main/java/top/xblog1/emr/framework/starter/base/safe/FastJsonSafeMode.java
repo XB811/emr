@@ -1,4 +1,4 @@
-package top.xblog1.emr.framework.starter.bases.safe;
+package top.xblog1.emr.framework.starter.base.safe;
 
 import org.springframework.beans.factory.InitializingBean;
 

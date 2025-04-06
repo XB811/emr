@@ -1,4 +1,4 @@
-package top.xblog1.emr.framework.starter.bases.constant;
+package top.xblog1.emr.framework.starter.base.constant;
 
 /**
  *用户常量

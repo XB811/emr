@@ -1,12 +1,12 @@
-package top.xblog1.emr.framework.starter.bases.config;
+package top.xblog1.emr.framework.starter.base.config;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
-import top.xblog1.emr.framework.starter.bases.ApplicationContextHolder;
-import top.xblog1.emr.framework.starter.bases.init.ApplicationContentPostProcessor;
-import top.xblog1.emr.framework.starter.bases.safe.FastJsonSafeMode;
+import top.xblog1.emr.framework.starter.base.ApplicationContextHolder;
+import top.xblog1.emr.framework.starter.base.init.ApplicationContentPostProcessor;
+import top.xblog1.emr.framework.starter.base.safe.FastJsonSafeMode;
 
 /**
  *  应用基础自动装配
