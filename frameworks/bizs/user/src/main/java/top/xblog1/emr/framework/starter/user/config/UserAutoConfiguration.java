@@ -4,7 +4,7 @@ import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import top.xblog1.emr.framework.starter.user.core.UserTransmitFilter;
 
-import static top.xblog1.emr.framework.starter.bases.constant.FilterOrderConstant.USER_TRANSMIT_FILTER_ORDER;
+import static top.xblog1.emr.framework.starter.base.constant.FilterOrderConstant.USER_TRANSMIT_FILTER_ORDER;
 
 /**
  * 用户配置自动装配

@@ -8,7 +8,7 @@ import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
 
 import org.springframework.util.StringUtils;
-import top.xblog1.emr.framework.starter.bases.constant.UserConstant;
+import top.xblog1.emr.framework.starter.base.constant.UserConstant;
 
 import java.io.IOException;
 import java.net.URLDecoder;

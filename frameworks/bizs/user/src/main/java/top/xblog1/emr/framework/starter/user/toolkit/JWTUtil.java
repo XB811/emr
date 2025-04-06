@@ -14,7 +14,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import static top.xblog1.emr.framework.starter.bases.constant.UserConstant.*;
+import static top.xblog1.emr.framework.starter.base.constant.UserConstant.*;
 
 /**
  * JWT 工具类
