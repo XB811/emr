@@ -24,6 +24,8 @@
         <module>distributedid</module>
 <!--        持久层-->
         <module>database</module>
+<!--        log-->
+        <module>log</module>
     </modules>
     <dependencies>
         <dependency>
