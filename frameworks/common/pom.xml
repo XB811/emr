@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>top.xblog1.emr</groupId>
+        <artifactId>emr-frameworks</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+    </parent>
+    <artifactId>emr-common-spring-boot-starter</artifactId>
+    <description>
+        公共组件库
+        组件概述
+        1. 抽象常用枚举码值，比如：删除标记枚举、标识枚举、操作类型以及状态枚举等。
+        2. 封装线程池相关功能，比如：线程池构造器、快速执行线程池、动态代理拒绝策略等。
+        3. 常用工具类，比如：断言类、对象复制工具类、环境类以及线程工具类等。
+    </description>
+
+    <dependencies>
+        <dependency>
+            <groupId>top.xblog1.emr</groupId>
+            <artifactId>emr-base-spring-boot-starter</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.dozermapper</groupId>
+            <artifactId>dozer-core</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>top.xblog1.emr</groupId>
+            <artifactId>emr-designpattern-spring-boot-starter</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
+</project>
