@@ -4,7 +4,7 @@ package top.xblog1.emr.framework.starter.designpattern.chain;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.Ordered;
 import org.springframework.util.CollectionUtils;
-import top.xblog1.emr.framework.starter.bases.ApplicationContextHolder;
+import top.xblog1.emr.framework.starter.base.ApplicationContextHolder;
 
 import java.util.*;
 import java.util.stream.Collectors;

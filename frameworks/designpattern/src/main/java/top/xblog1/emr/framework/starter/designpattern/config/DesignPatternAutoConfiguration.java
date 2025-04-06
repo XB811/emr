@@ -2,7 +2,7 @@ package top.xblog1.emr.framework.starter.designpattern.config;
 
 import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
 import org.springframework.context.annotation.Bean;
-import top.xblog1.emr.framework.starter.bases.config.ApplicationBaseAutoConfiguration;
+import top.xblog1.emr.framework.starter.base.config.ApplicationBaseAutoConfiguration;
 import top.xblog1.emr.framework.starter.designpattern.chain.AbstractChainContext;
 import top.xblog1.emr.framework.starter.designpattern.strategy.AbstractStrategyChoose;
 
