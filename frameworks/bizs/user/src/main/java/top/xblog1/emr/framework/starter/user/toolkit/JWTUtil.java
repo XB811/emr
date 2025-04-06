@@ -24,7 +24,7 @@ public final class JWTUtil {
 
     private static final long EXPIRATION = 86400L;
     public static final String TOKEN_PREFIX = "Bearer ";
-    public static final String ISS = "index12306";
+    public static final String ISS = "emr";
     public static final String SECRET = "SecretKey039245678901232039487623456783092349288901402967890140939827";
 
     /**

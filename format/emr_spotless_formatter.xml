@@ -20,7 +20,7 @@
 -->
 
 <profiles version="13">
-    <profile kind="CodeFormatterProfile" name="'12306 Current'" version="13">
+    <profile kind="CodeFormatterProfile" name="'emr Current'" version="13">
         <setting id="org.eclipse.jdt.core.compiler.source" value="17"/>
         <setting id="org.eclipse.jdt.core.compiler.compliance" value="17"/>
         <setting id="org.eclipse.jdt.core.compiler.codegen.targetPlatform" value="17"/>
