@@ -31,6 +31,8 @@ public class CacheAutoConfiguration {
 
     /**
      * 防止缓存穿透的布隆过滤器
+     * framework.cache.redis.bloom-filter.default.enabled=true时注入
+     * 使用{@link BloomFilterPenetrateProperties}对应的配置参数初始化布隆过滤器
      */
     @Bean
     @ConditionalOnProperty(prefix = BloomFilterPenetrateProperties.PREFIX, name = "enabled", havingValue = "true")

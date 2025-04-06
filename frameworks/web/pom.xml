@@ -9,6 +9,13 @@
     </parent>
 
     <artifactId>emr-web-spring-boot-starter</artifactId>
+    <description>
+        Web组件库
+        组件概述
+        1. 定义全局异常处理器。
+        2. 全局返回对象构造器。
+        3. 项目启动后初始化调用 HTTP 请求，增加第一次访问速度。
+    </description>
 
     <dependencies>
         <dependency>

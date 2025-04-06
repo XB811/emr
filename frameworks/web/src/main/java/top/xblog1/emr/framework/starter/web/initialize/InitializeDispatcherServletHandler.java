@@ -11,6 +11,7 @@ import static top.xblog1.emr.framework.starter.web.config.WebAutoConfiguration.I
 
 /**
  * 通过 {@link InitializeDispatcherServletController} 初始化 {@link DispatcherServlet}
+ * 调用 {@link InitializeDispatcherServletController#initializeDispatcherServlet()}
  */
 @RequiredArgsConstructor
 public final class InitializeDispatcherServletHandler implements CommandLineRunner {
