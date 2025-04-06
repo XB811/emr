@@ -26,6 +26,12 @@
         <module>database</module>
 <!--        log-->
         <module>log</module>
+<!--        web-->
+        <module>web</module>
+<!--        缓存-->
+        <module>cache</module>
+<!--        幂等-->
+        <module>idempotent</module>
     </modules>
     <dependencies>
         <dependency>
