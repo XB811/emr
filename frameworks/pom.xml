@@ -18,6 +18,12 @@
         <module>bizs</module>
 <!--        设计模式-->
         <module>designpattern</module>
+<!--        公共组件库-->
+        <module>common</module>
+<!--        分布式id-->
+        <module>distributedid</module>
+<!--        持久层-->
+        <module>database</module>
     </modules>
     <dependencies>
         <dependency>
