@@ -27,11 +27,15 @@ public class UserTransmitFilter implements Filter {
         if (StringUtils.hasText(userId)) {
             String userName = httpServletRequest.getHeader(UserConstant.USER_NAME_KEY);
             String realName = httpServletRequest.getHeader(UserConstant.REAL_NAME_KEY);
+            String userType = httpServletRequest.getHeader(UserConstant.USER_TYPE_KEY);
             if (StringUtils.hasText(userName)) {
                 userName = URLDecoder.decode(userName, UTF_8);
             }
             if (StringUtils.hasText(realName)) {
                 realName = URLDecoder.decode(realName, UTF_8);
+            }
+            if (StringUtils.hasText(userType)) {
+                userType = URLDecoder.decode(userType, UTF_8);
             }
             String token = httpServletRequest.getHeader(UserConstant.USER_TOKEN_KEY);
             UserInfoDTO userInfoDTO = UserInfoDTO.builder()
@@ -39,6 +43,7 @@ public class UserTransmitFilter implements Filter {
                     .username(userName)
                     .realName(realName)
                     .token(token)
+                    .userType(userType)
                     .build();
             UserContext.setUser(userInfoDTO);
         }

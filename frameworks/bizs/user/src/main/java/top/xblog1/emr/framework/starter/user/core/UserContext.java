@@ -60,6 +60,15 @@ public final class UserContext {
     }
 
     /**
+    * 获取上下文中用户类型
+    *
+    * @return String
+    */
+    public static String getUserType(){
+        UserInfoDTO userInfoDTO = USER_THREAD_LOCAL.get();
+        return Optional.ofNullable(userInfoDTO).map(UserInfoDTO::getUserType).orElse(null);
+    }
+    /**
      * 清理用户上下文
      */
     public static void removeUser() {

@@ -33,4 +33,8 @@ public class UserInfoDTO {
      * 用户 Token
      */
     private String token;
+    /**
+    * 用户类型
+    */
+    private String userType;
 }

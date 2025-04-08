@@ -24,5 +24,9 @@ public final class UserConstant {
      * 用户 Token Key
      */
     public static final String USER_TOKEN_KEY = "token";
-    //TODO 多租户可能还需要标记用户类型
+    // 多租户要标记用户类型
+    /**
+    * 用户类型 UserType
+    */
+    public static final String USER_TYPE_KEY = "userType";
 }
