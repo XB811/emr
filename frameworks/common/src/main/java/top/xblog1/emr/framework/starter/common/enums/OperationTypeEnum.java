@@ -13,7 +13,7 @@ import lombok.experimental.Accessors;
 @Accessors(fluent = true)
 public enum OperationTypeEnum {
 
-    SAVE("save","增加"),
+    SAVE("save","新增"),
 
     DELETE("delete","删除"),
 
