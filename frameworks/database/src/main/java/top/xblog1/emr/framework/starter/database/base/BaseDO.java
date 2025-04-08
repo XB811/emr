@@ -2,6 +2,7 @@ package top.xblog1.emr.framework.starter.database.base;
 
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableLogic;
 import lombok.Data;
 
 import java.util.Date;
@@ -28,5 +29,6 @@ public class BaseDO {
      * 删除标志
      */
     @TableField(fill = FieldFill.INSERT)
+    @TableLogic(value = "0", delval = "1")
     private Integer delFlag;
 }
