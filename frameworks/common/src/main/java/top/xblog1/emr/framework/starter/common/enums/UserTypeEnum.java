@@ -1,25 +1,19 @@
 package top.xblog1.emr.framework.starter.common.enums;
 
-
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.Accessors;
 
 /**
- * 操作类型
+ * 用户类型常量
  */
 @RequiredArgsConstructor
 @Getter
 @Accessors(fluent = true)
-public enum OperationTypeEnum {
-
-    SAVE("save","增加"),
-
-    DELETE("delete","删除"),
-
-    UPDATE("update","更新"),
-
-    QUERY_BY_ID("queryById","根据ID查询");
+public enum UserTypeEnum {
+    ADMIN("admin", "管理员"),
+    DOCTOR("doctor", "医生"),
+    PATIENT("patient", "患者");
     private final String code;
     private final String desc;
 }
