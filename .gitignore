@@ -31,3 +31,5 @@ build/
 
 ### VS Code ###
 .vscode/
+
+/services/user-services/src/main/resources
