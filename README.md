@@ -2,135 +2,150 @@
 
 #### 管理员表
 
-| 字段          | 类型   | 空 | 默认    | 注释   |
-|-------------|------|---|-------|------|
-| id          |      |   |       | 主键   |
-| username    |      |   |       | 用户名  |
-| password    |      |   |       | 密码   |
-| real_name   |      |   |       | 姓名   |
-| phone       |      |   |       | 电话   |
-| create_time |      |   |       | 新增时间 |
-| update_time |      |   |       | 更新时间 |
-| delete      | bool |   | false | 是否删除 |
+admin
+
+| 字段          | 类型         | 空 | 默认    | 注释   |
+|-------------|------------|---|-------|------|
+| id          | bigint(20) |   |       | 主键   |
+| username    | varchar(256) |   |       | 用户名  |
+| password    | varchar(512) |  |       | 密码   |
+| real_name   | varchar(256) |   |       | 姓名   |
+| phone       | varchar(128) |   |       | 电话   |
+| create_time | datetime   |   |       | 新增时间 |
+| update_time | datetime   |   |       | 更新时间 |
+| del_flag    | bool       |   | false | 删除标识 |
 
 #### 用户表
 
-| 字段          | 类型   | 空 | 默认    | 注释   |
-|-------------|------|---|-------|------|
-| id          |      |   |       | 主键   |
-| username    |      |   |       | 用户名  |
-| password    |      |   |       | 密码   |
-| real_name   |      |   |       | 姓名   |
-| phone       |      |   |       | 电话   |
-| gender      |      |   |       | 性别   |
-| id_number   |      |   |       | 身份证号 |
-| create_time |      |   |       | 新增时间 |
-| update_time |      |   |       | 更新时间 |
-| delete      | bool |   | false | 是否删除 |
+user
+
+| 字段          | 类型         | 空 | 默认    | 注释   |
+|-------------|------------|---|-------|------|
+| id          | bigint(20) |   |       | 主键   |
+| username    | varchar(256) |   |       | 用户名  |
+| password    | varchar(512) |  |       | 密码   |
+| real_name   | varchar(256) |   |       | 姓名   |
+| phone       | varchar(128) |   |       | 电话   |
+| gender      | tinyint    |   |       | 性别   |
+| id_card | varchar(256) |   |       | 身份证号 |
+| create_time | datetime   |   |       | 新增时间 |
+| update_time | datetime   |   |       | 更新时间 |
+| del_flag    | bool       |   | false | 删除标识 |
 
 #### 医生表
+doctor
 
-| 字段            | 类型   | 空 | 默认    | 注释              |
-|---------------|------|---|-------|-----------------|
-| id            |      |   |       | 主键              |
-| username      |      |   |       | 用户名/医生工号/系统自动分配 |
-| password      |      |   |       | 密码              |
-| real_name     |      |   |       | 姓名              |
-| gender        |      |   |       | 性别              |
-| phone         |      |   |       | 手机号             |
-| department_id |      |   |       | 科室id            |
-| title         |      |   |       | 职称              |
-| specialty     |      |   |       | 专业方向            |
-| create_time   |      |   |       | 新增时间            |
-| update_time   |      |   |       | 更新时间            |
-| delete        | bool |   | false | 是否删除            |
+| 字段            | 类型         | 空 | 默认    | 注释              |
+|---------------|------------|---|-------|-----------------|
+| id            | bigint(20) |   |       | 主键              |
+| username      | varchar(256) |   |       | 用户名/医生工号/系统自动分配 |
+| password      | varchar(512) |  |       | 密码              |
+| real_name     | varchar(256) |   |       | 姓名              |
+| gender        | tinyint    |   |       | 性别              |
+| phone         | varchar(128) |   |       | 手机号             |
+| department_id | bigint     |   |       | 科室id            |
+| title         | varchar(50)|   |       | 职称              |
+| specialty     | text       |   |       | 专业方向            |
+| create_time   | datetime   |   |       | 新增时间            |
+| update_time   | datetime   |   |       | 更新时间            |
+| del_flag      | bool       |   | false | 删除标识            |
 
 #### 科室表
 
 department
 
-| 字段          | 类型   | 空 | 默认    | 注释      |
-|-------------|------|---|-------|---------|
-| id          |      |   |       | 科室id/主键 |
-| name        |      |   |       | 科室名称    |
-| describe    |      |   |       | 科室介绍    |
-| location    |      |   |       | 科室位置    |
-| create_time |      |   |       | 新增时间    |
-| update_time |      |   |       | 更新时间    |
-| delete      | bool |   | false | 是否删除    |
+| 字段          | 类型         | 空 | 默认    | 注释      |
+|-------------|------------|---|-------|---------|
+| id          | bigint(20) |   |       | 科室id/主键 |
+| name        | varchar(50)|   |       | 科室名称    |
+| describe    | text       |   |       | 科室介绍    |
+| address    | varchar(256)|  |       | 科室位置    |
+| create_time | datetime   |   |       | 新增时间    |
+| update_time | datetime   |   |       | 更新时间    |
+| del_flag    | bool       |   | false | 删除标识    |
 
 #### 电子病历表
 
-| 字段              | 类型   | 空 | 默认    | 注释        |
-|-----------------|------|---|-------|-----------|
-| id              |      |   |       | 主键        |
-| user_id         |      |   |       | 患者id      |
-| user_real_name  |      |   |       | 患者姓名      |
-| age             |      |   |       | 患者年龄      |
-| department_id   |      |   |       | 科室id      |
-| department_name |      |   |       | 科室名       |
-| content         |      |   |       | 主诉/病情关键信息 |
-|                 |      |   |       | 现病史/病历详情  |
-|                 |      |   |       | 既往史       |
-|                 |      |   |       | 药敏史       |
-|                 |      |   |       | 诊断/检测结果   |
-|                 |      |   |       | 治疗方案      |
-|                 |      |   |       | 医嘱        |
-| doctor_id       |      |   |       | 医生id      |
-| doctor_name     |      |   |       | 医生姓名      |
-| create_time     |      |   |       | 新增时间/出诊时间 |
-| update_time     |      |   |       | 更新时间      |
-| delete          | bool |   | false | 是否删除      |
+emr
+
+| 字段            | 类型        | 空   | 默认  | 注释              |
+| --------------- | ----------- | ---- | ----- | ----------------- |
+| id              | bigint(20)  |      |       | 主键              |
+| user_id         | bigint      |      |       | 患者id            |
+| user_real_name  | varchar(256) |      |       | 患者姓名          |
+| age             | int         |      |       | 患者年龄          |
+| department_id   | bigint      |      |       | 科室id            |
+| department_name | varchar(50) |      |       | 科室名            |
+| content         | text        |      |       | 主诉/病情关键信息 |
+| present_history | text        |      |       | 现病史/病历详情   |
+| past_history    | text        |      |       | 既往史            |
+| allergy_history | text        |      |       | 药敏史            |
+| diagnosis       | text        |      |       | 诊断/检测结果     |
+| treatment_plan  | text        |      |       | 治疗方案          |
+| doctor_advice   | text        |      |       | 医嘱              |
+| doctor_id       | bigint      |      |       | 医生id            |
+| doctor_name     | varchar(50) |      |       | 医生姓名          |
+| create_time     | datetime    |      |       | 新增时间/出诊时间 |
+| update_time     | datetime    |      |       | 更新时间          |
+| del_flag        | bool        |      | false | 删除标识          |
 
 #### 预约时间管理表（医生预约挂号信息管理）
+booking
 
-| 字段          | 类型   | 空 | 默认    | 注释             |
-|-------------|------|---|-------|----------------|
-| id          |      |   |       | 主键             |
-| doctor_id   |      |   |       | 医生id           |
-|             |      |   |       | 可预约时间/14位二进制表示 |
-|             | bool |   | false | 当前医生是否可用       |
-| create_time |      |   |       | 新增时间           |
-| update_time |      |   |       | 更新时间           |
-| delete      | bool |   | false | 是否删除           |
+
+| 字段           | 类型        | 空   | 默认  | 注释                      |
+| -------------- | ----------- | ---- | ----- | ------------------------- |
+| id             | bigint(20)  |      |       | 主键                      |
+| doctor_id      | bigint      |      |       | 医生id                    |
+| available_time | varchar(50) |      |       | 可预约时间/14位二进制表示 |
+| is_available   | bool        |      | false | 当前医生是否可用          |
+| create_time    | datetime    |      |       | 新增时间                  |
+| update_time    | datetime    |      |       | 更新时间                  |
+| del_flag       | bool        |      | false | 删除标识                  |
 
 #### 用户挂号管理表
 
-| 字段          | 类型   | 空 | 默认    | 注释    |
-|-------------|------|---|-------|-------|
-| id          |      |   |       | 主键    |
-| user_id     |      |   |       | 患者id  |
-| doctor_id   |      |   |       | 医生id  |
-|             |      |   |       | 预约日期  |
-|             |      |   |       | 预约时间段 |
-| create_time |      |   |       | 新增时间  |
-| update_time |      |   |       | 更新时间  |
-| delete      | bool |   | false | 是否删除  |
+registration
+
+| 字段             | 类型        | 空   | 默认  | 注释       |
+| ---------------- | ----------- | ---- | ----- | ---------- |
+| id               | bigint(20)  |      |       | 主键       |
+| user_id          | bigint      |      |       | 患者id     |
+| doctor_id        | bigint      |      |       | 医生id     |
+| appointment_date | date        |      |       | 预约日期   |
+| appointment_time | varchar(20) |      |       | 预约时间段 |
+| create_time      | datetime    |      |       | 新增时间   |
+| update_time      | datetime    |      |       | 更新时间   |
+| del_flag         | bool        |      | false | 删除标识   |
 
 #### 就诊评价表
 
-| 字段          | 类型   | 空 | 默认    | 注释     |
-|-------------|------|---|-------|--------|
-| id          |      |   |       | 主键     |
-| user_id     |      |   |       | 患者id   |
-| doctor_id   |      |   |       | 医生id   |
-| emr_id      |      |   |       | 电子病历id |
-| constant    |      |   |       | 评价内容   |
-| create_time |      |   |       | 新增时间   |
-| update_time |      |   |       | 更新时间   |
-| delete      | bool |   | false | 是否删除   |
+evaluation
+
+| 字段        | 类型       | 空   | 默认  | 注释       |
+| ----------- | ---------- | ---- | ----- | ---------- |
+| id          | bigint(20) |      |       | 主键       |
+| user_id     | bigint     |      |       | 患者id     |
+| doctor_id   | bigint     |      |       | 医生id     |
+| emr_id      | bigint     |      |       | 电子病历id |
+| content     | text       |      |       | 评价内容   |
+| create_time | datetime   |      |       | 新增时间   |
+| update_time | datetime   |      |       | 更新时间   |
+| del_flag    | bool       |      | false | 删除标识   |
 
 #### 公告表
 
-| 字段          | 类型   | 空 | 默认    | 注释    |
-|-------------|------|---|-------|-------|
-| id          |      |   |       | 主键    |
-| admin_id    |      |   |       | 管理员id |
-| title       |      |   |       | 公告标题  |
-| constant    |      |   |       | 公告内容  |
-| create_time |      |   |       | 新增时间  |
-| update_time |      |   |       | 更新时间  |
-| delete      | bool |   | false | 是否删除  |
+notice
+
+| 字段          | 类型         | 空 | 默认    | 注释    |
+|-------------|------------|---|-------|-------|
+| id          | bigint(20) |   |       | 主键    |
+| admin_id    | bigint     |   |       | 管理员id |
+| title       | varchar(100)|  |       | 公告标题  |
+| content     | text       |   |       | 公告内容  |
+| create_time | datetime   |   |       | 新增时间  |
+| update_time | datetime   |   |       | 更新时间  |
+| del_flag    | bool       |   | false | 删除标识  |
 
 ## 实体关系图
 
@@ -156,3 +171,13 @@ department
 - **build**: 构建系统或外部依赖项的变更
 - **ci**: 持续集成配置的变更
 - **revert**: 回滚
+
+## RESTful API 设计
+在RESTful API设计中，增删改查(CRUD)操作对应的四种HTTP请求方式如下：
+
+1. **增(Create)** - **POST**
+2. **删(Delete)** - **DELETE**
+3. **改(Update)** - **PUT/PATCH**
+4. **查(Read)** - **GET**
+
+这些注解在Spring MVC中用于映射HTTP请求到控制器方法。
