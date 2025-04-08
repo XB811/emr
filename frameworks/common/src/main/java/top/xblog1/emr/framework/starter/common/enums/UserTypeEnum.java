@@ -13,7 +13,8 @@ import lombok.experimental.Accessors;
 public enum UserTypeEnum {
     ADMIN("admin", "管理员"),
     DOCTOR("doctor", "医生"),
-    PATIENT("patient", "患者");
+    PATIENT("patient", "患者"),
+    GUEST("guest","未登录用户");
     private final String code;
     private final String desc;
 }
