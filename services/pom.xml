@@ -11,6 +11,9 @@
     <artifactId>emr-services</artifactId>
     <packaging>pom</packaging>
 
+    <modules>
+        <module>user-services</module>
+    </modules>
 
     <dependencies>
         <dependency>
