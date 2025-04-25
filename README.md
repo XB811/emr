@@ -15,9 +15,9 @@ admin
 | update_time | datetime   |   |       | 更新时间 |
 | del_flag    | bool       |   | false | 删除标识 |
 
-#### 用户表
+#### 患者表
 
-user
+patient
 
 | 字段          | 类型         | 空 | 默认    | 注释   |
 |-------------|------------|---|-------|------|
@@ -147,6 +147,20 @@ notice
 | update_time | datetime   |   |       | 更新时间  |
 | del_flag    | bool       |   | false | 删除标识  |
 
+#### 权限表
+
+permissions
+
+| 字段        | 类型         | 空   | 默认  | 注释                         |
+| ----------- | ------------ | ---- | ----- | ---------------------------- |
+| id          | bigint(20)   |      |       | 主键                         |
+| url         | varchar(512) |      |       | 请求路径                     |
+| license     | bigint       |      |       | 使用二进制存在不同用户的权限 |
+| create_time | datetime     |      |       | 新增时间                     |
+| update_time | datetime     |      |       | 更新时间                     |
+| del_flag    | bool         |      | false | 删除标识                     |
+
+
 ## 实体关系图
 
 ![image-20250402101931300](http://qnimg.xblog1.top/typora/image-20250402101931300.png)
@@ -181,3 +195,184 @@ notice
 4. **查(Read)** - **GET**
 
 这些注解在Spring MVC中用于映射HTTP请求到控制器方法。
+
+## sql
+
+```
+create table admin
+(
+    id          bigint       not null comment '主键'
+        primary key,
+    username    varchar(256) not null comment '用户名',
+    password    varchar(512) not null comment '密码',
+    real_name   varchar(256) null comment '真实姓名',
+    phone       varchar(128) null comment '手机号',
+    create_time datetime     null comment '新增时间',
+    update_time datetime     null comment '更新时间',
+    del_flag    tinyint(1)   null comment '删除标识'
+);
+
+create table booking
+(
+    id             bigint       not null comment '主键'
+        primary key,
+    doctor_id      bigint       null comment '医生ID',
+    doctor_name    varchar(256) null comment '医生姓名',
+    available_time bigint       null comment '可预约时间',
+    is_available   tinyint(1)   null comment '当前是否可预约',
+    create_time    datetime     null comment '新增时间',
+    update_time    datetime     null comment '更新时间',
+    del_flag       tinyint(1)   null comment '删除标识'
+);
+
+create table department
+(
+    id          bigint       not null comment '主键'
+        primary key,
+    name        varchar(255) null comment '科室名称',
+    `describe`  text         null comment '科室介绍',
+    address     varchar(255) null comment '科室位置',
+    create_time datetime     null comment '新增时间',
+    update_time datetime     null comment '更新时间',
+    del_flag    tinyint(1)   null comment '删除标识'
+);
+
+create table doctor
+(
+    id            bigint       not null comment '主键'
+        primary key,
+    username      varchar(256) null comment '用户名/工号',
+    password      varchar(512) null comment '密码',
+    real_name     varchar(256) null comment '姓名',
+    gender        tinyint      null comment '性别',
+    phone         varchar(128) null comment '手机号',
+    department_id bigint       null comment '科室ID',
+    title         varchar(256) null comment '职称',
+    specialty     text         null comment '专业方向
+',
+    create_time   datetime     null comment '新增时间',
+    update_time   datetime     null comment '更新时间',
+    del_flag      tinyint(1)   null comment '删除标识'
+);
+
+create table emr
+(
+    id              bigint       not null comment '主键'
+        primary key,
+    user_id         bigint       not null comment '患者ID',
+    real_name       varchar(255) null comment '患者姓名',
+    age             int          null comment '患者年龄',
+    department_id   bigint       null comment '科室ID',
+    department_name text         null comment '科室名',
+    content         text         null comment '主诉/病情关键信息',
+    present_history text         null comment '现病史',
+    past_history    text         null comment '既往史',
+    allergy_history text         null comment '药敏史',
+    diagnosis       text         null comment '诊断',
+    treatment_plan  text         null comment '治疗方案',
+    doctor_advice   text         null comment '医嘱',
+    doctor_id       int          not null comment '医生ID',
+    doctor_name     varchar(255) null comment '医生姓名',
+    create_time     datetime     null comment '新增时间',
+    update_time     datetime     null comment '更新时间',
+    del_flag        tinyint(1)   null comment '删除标识'
+);
+
+create table evaluation
+(
+    id          bigint     not null comment '主键'
+        primary key,
+    user_id     bigint     null comment '患者ID',
+    doctor_id   bigint     null comment '医生ID',
+    emr_id      bigint     null comment '电子病历ID',
+    content     text       null comment '评价内容',
+    create_time datetime   null comment '新增时间',
+    update_time datetime   null comment '更新时间',
+    del_flag    tinyint(1) null comment '删除标识'
+);
+
+create table notice
+(
+    id          bigint       not null comment '主键'
+        primary key,
+    admin_id    bigint       null comment '管理员id',
+    title       varchar(255) null comment '公告标题',
+    content     text         null comment '公告内容',
+    create_time datetime     null comment '新增时间',
+    update_time datetime     null comment '更新时间',
+    del_flag    tinyint(1)   null comment '删除标识'
+);
+
+create table patient
+(
+    id          bigint       not null comment '主键'
+        primary key,
+    username    varchar(256) not null comment '用户名',
+    password    varchar(512) null comment '密码',
+    real_name   varchar(256) null comment '姓名',
+    phone       varchar(128) null comment '电话',
+    gender      tinyint      null comment '性别',
+    id_card     varchar(256) null comment '身份证号',
+    create_time datetime     null comment '新增时间',
+    update_time datetime     null comment '更新时间',
+    del_flag    tinyint(1)   null comment '删除标识'
+);
+
+create table registration
+(
+    id               bigint     not null comment '主键'
+        primary key,
+    user_id          bigint     null comment '患者ID',
+    doctor_id        bigint     null comment '医生ID',
+    appointment_date date       null comment '预约时间',
+    appointment_time tinyint    null comment '预约时间段',
+    create_time      datetime   null comment '新增时间',
+    update_time      datetime   null comment '更新时间',
+    del_flag         tinyint(1) null comment '删除标识'
+);
+
+
+```
+
+
+
+```
+├─dependencies //依赖包统一管理
+├─frameworks//公告组件封装，如UserConstant ，Result，全局异常处理器，设计模式等
+│  ├─base
+│  ├─bizs
+│  ├─cache
+│  ├─common
+│  ├─convention
+│  ├─//······
+└─services
+    ├─department-services
+    |-//······
+    └─user-services
+        ├─src
+        │  ├─main
+        │  │  ├─java
+        │  │  │  └─top.xblog1.emr.services.user
+        │  │  │                      ├─common//常量
+        │  │  │                      ├─config
+        │  │  │                      ├─controller
+        │  │  │                      ├─dao
+        │  │  │                      │  ├─entity
+        │  │  │                      │  └─mapper
+        │  │  │                      ├─dto
+        │  │  │                      │  ├─req
+        │  │  │                      │  ├─resp
+        │  │  │                      │  └─strategy
+        │  │  │                      ├─services
+        │  │  │                      │  ├─handler//责任链校验
+        │  │  │                      │  │  └─filter
+        │  │  │                      │  │      └─user
+        │  │  │                      │  ├─impl
+        │  │  │                      │  └─strategy//策略模式
+        │  │  │                      │      ├─admin
+        │  │  │                      │      ├─doctor
+        │  │  │                      │      └─patient
+        │  │  │                      └─toolkit
+        │  │  └─resources
+```
+
