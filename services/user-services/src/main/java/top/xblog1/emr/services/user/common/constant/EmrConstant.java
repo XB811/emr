@@ -19,12 +19,11 @@ package top.xblog1.emr.services.user.common.constant;
 
 /**
  * 系统级公共常量
- * 公众号：马丁玩编程，回复：加群，添加马哥微信（备注：12306）获取项目资料
  */
 public final class EmrConstant {
 
     /**
      * 用户注册可复用用户名分片数
      */
-    public static final int USER_REGISTER_REUSE_SHARDING_COUNT = 1024;
+    public static final int PATIENT_REGISTER_PHONE_REUSE_SHARDING_COUNT = 1024;
 }

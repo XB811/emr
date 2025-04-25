@@ -33,11 +33,11 @@ public final class RedisKeyConstant {
      * 用户注销锁，Key Prefix + 用户名
      */
     public static final String USER_DELETION = "emr-user-service:user-deletion:";
-
+    public static final String PATIENT_DELETION = "emr-user-service:patient-deletion:";
     /**
      * 用户注册可复用用户名分片，Key Prefix + Idx
      */
-    public static final String USER_REGISTER_REUSE_SHARDING = "emr-user-service:user-reuse:";
+    public static final String PATIENT_REGISTER_PHONE_REUSE_SHARDING = "emr-user-service:patient-phone-reuse:";
     /**
      * 医生和管理员用户名字自增
      */

@@ -129,7 +129,7 @@ public class AdminLoginStrategy extends AbstractUserExecuteStrategy {
     public void deletion(BaseUserDTO baseUserDTO){
         //拆包
         UserDeletionReqDTO requestParam = baseUserDTO.getUserDeletionReqDTO();
-        //只有admin00000001和当前用户可以注销所有用户
+        //只有root和当前用户可以注销所有用户
         String username = UserContext.getUsername();
         if (!Objects.equals(username, requestParam.getUsername())) {
             //如果登录账户和注销账户不一样，且登录用户不是root用户
@@ -141,7 +141,10 @@ public class AdminLoginStrategy extends AbstractUserExecuteStrategy {
             throw new ClientException("root用户不可删除");
         }
         RLock lock = redissonClient.getLock(USER_DELETION + requestParam.getUsername());
-        lock.lock();
+        boolean tryLock=lock.tryLock();
+        if (!tryLock) {
+            throw new ServiceException("用户注销失败");
+        }
         try{
             //查询到用户并删除
             LambdaQueryWrapper<AdminDO> queryWrapper = Wrappers.lambdaQuery(AdminDO.class)

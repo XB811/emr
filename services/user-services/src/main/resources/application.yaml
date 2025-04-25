@@ -43,4 +43,7 @@ framework:
       value-timeout: 50000  # Redis??????????
       bloom-filter:
         user-register:
-          name: patient_register_name_cache_penetration_bloom_filter  # ??????????????
+          username:
+            name: patient_register_username_cache_penetration_bloom_filter  # ??????????????
+          phone:
+            name: patient_register_phone_cache_penetration_bloom_filter

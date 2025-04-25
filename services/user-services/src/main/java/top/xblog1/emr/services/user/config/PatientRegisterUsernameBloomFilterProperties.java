@@ -3,19 +3,19 @@ package top.xblog1.emr.services.user.config;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 /**
- * 用户注册布隆过滤器属性配置
+ * 用户注册用户名布隆过滤器属性配置
  * 只用于患者
  */
 @Data
-@ConfigurationProperties(prefix = UserRegisterBloomFilterProperties.PREFIX)
-public final class UserRegisterBloomFilterProperties {
+@ConfigurationProperties(prefix = PatientRegisterUsernameBloomFilterProperties.PREFIX)
+public final class PatientRegisterUsernameBloomFilterProperties {
 
-    public static final String PREFIX = "framework.cache.redis.bloom-filter.user-register";
+    public static final String PREFIX = "framework.cache.redis.bloom-filter.user-register.username";
 
     /**
      * 用户注册布隆过滤器实例名称
      */
-    private String name = "user_register_cache_penetration_bloom_filter";
+    private String name = "patient_register_username_cache_penetration_bloom_filter";
 
     /**
      * 每个元素的预期插入量
