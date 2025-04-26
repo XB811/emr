@@ -27,7 +27,7 @@ public class DepartmentController {
     * @param requestParam 
     * @return Result<Long> 
     */
-    @PostMapping("/create")
+    @PostMapping("/v1/create")
     public Result<Long> createDepartment(@RequestBody @Valid DepartmentInsertReqDTO requestParam){
 
         return Results.success(departmentServices.create(requestParam));
@@ -38,7 +38,7 @@ public class DepartmentController {
     * @param id 
     * @return Result<Void> 
     */
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/v1/delete/{id}")
     public Result<Void> deleteDepartment(@PathVariable Long id){
         departmentServices.delete(id);
         return Results.success();
@@ -49,7 +49,7 @@ public class DepartmentController {
     * @param requestParam 
     * @return Result<DepartmentUpdateRespDTO> 
     */
-    @PutMapping("/update")
+    @PutMapping("/v1/update")
     public Result<DepartmentUpdateRespDTO> updateDepartment(@RequestBody @Valid DepartmentUpdateReqDTO requestParam){
         return Results.success(departmentServices.update(requestParam));
     }
@@ -59,7 +59,7 @@ public class DepartmentController {
     * @param id 
     * @return Result<DepartmentQueryRespDTO> 
     */
-    @GetMapping("/queryById/{id}")
+    @GetMapping("/v1/queryById/{id}")
     public Result<DepartmentQueryRespDTO> queryById(@PathVariable @Valid Long id){
         return Results.success(departmentServices.queryById(id));
     }
@@ -67,7 +67,7 @@ public class DepartmentController {
     * 查询全部科室
     * @return Result<List<DepartmentQueryRespDTO>>
     */
-    @GetMapping("/queryAll")
+    @GetMapping("/v1/queryAll")
     public Result<List<DepartmentQueryRespDTO>> queryAll(){
         return Results.success(departmentServices.queryAll());
     }
