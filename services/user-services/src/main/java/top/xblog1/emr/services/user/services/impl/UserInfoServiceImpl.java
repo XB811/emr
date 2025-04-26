@@ -35,8 +35,8 @@ public class UserInfoServiceImpl implements UserService {
         * 对更新参数做参数校验
          * 和注册校验判断要求相同
         */
-        abstractChainContext.handler(UserChainMarkEnum.USER_REGISTER_FILTER.name(),
-                BeanUtil.convert(requestParam, UserRegisterReqDTO.class));
+//        abstractChainContext.handler(UserChainMarkEnum.USER_REGISTER_FILTER.name(),
+//                BeanUtil.convert(requestParam, UserRegisterReqDTO.class));
         BaseUserDTO request = BaseUserDTO.builder()
                 .userUpdateReqDTO(requestParam)
                 .operationType(UserOperationTypeEnum.USER_UPDATE)
