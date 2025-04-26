@@ -52,5 +52,5 @@ public class UserQueryRespDTO {
      * 身份证
      */
     @JsonSerialize(using = IdCardDesensitizationSerializer.class)
-    private String IdCard;
+    private String idCard;
 }

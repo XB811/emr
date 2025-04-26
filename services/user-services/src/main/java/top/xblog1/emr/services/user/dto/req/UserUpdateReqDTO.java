@@ -50,5 +50,5 @@ public class UserUpdateReqDTO {
     /**
      * 身份证
      */
-    private String IdCard;
+    private String idCard;
 }

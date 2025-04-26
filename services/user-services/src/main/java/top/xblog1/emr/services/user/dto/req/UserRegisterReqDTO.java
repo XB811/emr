@@ -48,5 +48,5 @@ public class UserRegisterReqDTO {
     /**
      * 身份证
      */
-    private String IdCard;
+    private String idCard;
 }
