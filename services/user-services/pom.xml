@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>top.xblog1.emr</groupId>
-		<artifactId>emr-services</artifactId>
+		<artifactId>emr-all-services</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 
