@@ -3,8 +3,11 @@ package top.xblog1.emr.services.user.services.impl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import top.xblog1.emr.framework.starter.common.toolkit.BeanUtil;
+import top.xblog1.emr.framework.starter.designpattern.chain.AbstractChainContext;
 import top.xblog1.emr.framework.starter.designpattern.strategy.AbstractStrategyChoose;
+import top.xblog1.emr.services.user.common.enums.UserChainMarkEnum;
 import top.xblog1.emr.services.user.common.enums.UserOperationTypeEnum;
+import top.xblog1.emr.services.user.dto.req.UserRegisterReqDTO;
 import top.xblog1.emr.services.user.dto.req.UserUpdateReqDTO;
 import top.xblog1.emr.services.user.dto.resp.UserQueryActualRespDTO;
 import top.xblog1.emr.services.user.dto.resp.UserQueryRespDTO;
@@ -20,6 +23,7 @@ import static top.xblog1.emr.services.user.common.constant.UserExecuteStrategyCo
 @RequiredArgsConstructor
 public class UserInfoServiceImpl implements UserService {
     private final AbstractStrategyChoose strategyChoose;
+    private final AbstractChainContext abstractChainContext;
     /**
     * 根据username修改用户
     * @param requestParam
@@ -27,6 +31,12 @@ public class UserInfoServiceImpl implements UserService {
     */
     @Override
     public void update(UserUpdateReqDTO requestParam) {
+        /**
+        * 对更新参数做参数校验
+         * 和注册校验判断要求相同
+        */
+        abstractChainContext.handler(UserChainMarkEnum.USER_REGISTER_FILTER.name(),
+                BeanUtil.convert(requestParam, UserRegisterReqDTO.class));
         BaseUserDTO request = BaseUserDTO.builder()
                 .userUpdateReqDTO(requestParam)
                 .operationType(UserOperationTypeEnum.USER_UPDATE)
