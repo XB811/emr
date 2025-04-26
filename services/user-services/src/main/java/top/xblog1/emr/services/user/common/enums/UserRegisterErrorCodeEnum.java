@@ -26,32 +26,32 @@ import top.xblog1.emr.framework.starter.convention.errorcode.IErrorCode;
 @AllArgsConstructor
 public enum UserRegisterErrorCodeEnum implements IErrorCode {
 
-    USER_REGISTER_FAIL("A006000", "用户注册失败"),
+    USER_REGISTER_FAIL("A001000", "用户注册失败"),
 
-    USER_NAME_NOTNULL("A006001", "用户名不能为空"),
+    USER_NAME_NOTNULL("A001001", "用户名不能为空"),
 
-    PASSWORD_NOTNULL("A006002", "密码不能为空"),
+    PASSWORD_NOTNULL("A001002", "密码不能为空"),
 
-    PHONE_NOTNULL("A006003", "手机号不能为空"),
+    PHONE_NOTNULL("A001003", "手机号不能为空"),
 
-    USER_TYPE_NOTNULL("A006004","用户类型不能为空"),
+    USER_TYPE_NOTNULL("A001004","用户类型不能为空"),
 
-    ID_CARD_NOTNULL("A006005", "证件号不能为空"),
+    ID_CARD_NOTNULL("A001005", "证件号不能为空"),
 
-    HAS_USERNAME_NOTNULL("A006006", "用户名已存在"),
+    HAS_USERNAME_NOTNULL("A001006", "用户名已存在"),
 
-    PHONE_REGISTERED("A006007", "手机号已被占用"),
+    PHONE_REGISTERED("A001007", "手机号已被占用"),
 
-    REAL_NAME_NOTNULL("A006015", "真实姓名不能为空"),
-    USER_TYPE_ERROR("A006016","用户类型错误"),
-    DEPARTMENT_ID_NOTNULL("A006017","部门id不能为空"),
+    REAL_NAME_NOTNULL("A001015", "真实姓名不能为空"),
+    USER_TYPE_ERROR("A001016","用户类型错误"),
+    DEPARTMENT_ID_NOTNULL("A001017","部门id不能为空"),
 
-    TITLE_NOTNULL("A006018", "职称不能为空"),
-    SPECIALTY_NOTNULL("A006019", "专业方向不能为空"),
-    GENDER_NOTNULL("A006020", "性别不能为空"),
-    HAS_PHONE("A006021","手机号已经注册"),
-    PHONE_PATTERN_ERROR("A006022","手机号格式错误"),
-    ID_CARD_PATTERN_ERROR("A006023","身份证号格式错误"),
+    TITLE_NOTNULL("A001018", "职称不能为空"),
+    SPECIALTY_NOTNULL("A001019", "专业方向不能为空"),
+    GENDER_NOTNULL("A001020", "性别不能为空"),
+    HAS_PHONE("A001021","手机号已经注册"),
+    PHONE_PATTERN_ERROR("A001022","手机号格式错误"),
+    ID_CARD_PATTERN_ERROR("A001023","身份证号格式错误"),
     ;
 
     /**
