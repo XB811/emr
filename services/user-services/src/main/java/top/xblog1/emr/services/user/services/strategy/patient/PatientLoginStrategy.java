@@ -61,7 +61,6 @@ public class PatientLoginStrategy extends AbstractUserExecuteStrategy {
 
     private final AbstractChainContext<UserRegisterReqDTO> abstractChainContext;
     private final RedissonClient redissonClient;
-    private final PatientDO patientDO;
     private final DistributedCache distributedCache;
     private final RBloomFilter<String> patientRegisterUsernameCachePenetrationBloomFilter;
     private final RBloomFilter<String> patientRegisterPhoneCachePenetrationBloomFilter;
