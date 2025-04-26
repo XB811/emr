@@ -65,29 +65,33 @@ public class PatientInfoStrategy extends AbstractUserExecuteStrategy {
         UserUpdateReqDTO requestParam = baseUserDTO.getUserUpdateReqDTO();
         StringRedisTemplate instance = (StringRedisTemplate) distributedCache.getInstance();
         //查询用户
-        baseUserDTO.setId(Long.valueOf(requestParam.getId()));
-        String oldPhone = queryActualUserByID(baseUserDTO)
-                .getUserQueryActualRespDTO()
-                .getPhone();
-        //更新布隆过滤器和复用表中的手机号
-        if(!Objects.equals(oldPhone, requestParam.getPhone())){
-            String newPhone = requestParam.getPhone();
-            //查询新号码是否可用
-            if(patientRegisterPhoneCachePenetrationBloomFilter.contains(newPhone)){
-                throw new ClientException(HAS_PHONE);
-            }
-            //旧号码加入复用表
-            patientPhoneReuseMapper.insert(new PatientPhoneReuseDO(oldPhone));
-            instance.opsForSet().add(PATIENT_REGISTER_PHONE_REUSE_SHARDING+hashShardingIdx(oldPhone), oldPhone);
-            //新号码加入布隆过滤器，从复用表删除
-            patientPhoneReuseMapper.delete(Wrappers.update(new PatientPhoneReuseDO(newPhone)));
-            instance.opsForSet().remove(PATIENT_REGISTER_PHONE_REUSE_SHARDING + hashShardingIdx(newPhone), newPhone);
-            patientRegisterPhoneCachePenetrationBloomFilter.add(newPhone);
+        if(requestParam.getPhone()!=null&&!requestParam.getPhone().isEmpty()) {
+            baseUserDTO.setId(Long.valueOf(requestParam.getId()));
+            String oldPhone = queryActualUserByID(baseUserDTO)
+                    .getUserQueryActualRespDTO()
+                    .getPhone();
+            //更新布隆过滤器和复用表中的手机号
+            if (!Objects.equals(oldPhone, requestParam.getPhone())) {
+                String newPhone = requestParam.getPhone();
+                //查询新号码是否可用
+                if (patientRegisterPhoneCachePenetrationBloomFilter.contains(newPhone)) {
+                    throw new ClientException(HAS_PHONE);
+                }
+                //旧号码加入复用表
+                patientPhoneReuseMapper.insert(new PatientPhoneReuseDO(oldPhone));
+                instance.opsForSet().add(PATIENT_REGISTER_PHONE_REUSE_SHARDING + hashShardingIdx(oldPhone), oldPhone);
+                //新号码加入布隆过滤器，从复用表删除
+                patientPhoneReuseMapper.delete(Wrappers.update(new PatientPhoneReuseDO(newPhone)));
+                instance.opsForSet().remove(PATIENT_REGISTER_PHONE_REUSE_SHARDING + hashShardingIdx(newPhone), newPhone);
+                patientRegisterPhoneCachePenetrationBloomFilter.add(newPhone);
 
+            }
         }
         PatientDO patientDO = BeanUtil.convert(requestParam, PatientDO.class);
-        //密码加密
-        patientDO.setPassword(PasswordEncryptUtil.encryptPassword(requestParam.getPassword()));
+        if(requestParam.getPassword()!=null&&!requestParam.getPassword().isEmpty()) {
+            //密码加密
+            patientDO.setPassword(PasswordEncryptUtil.encryptPassword(requestParam.getPassword()));
+        }
         LambdaUpdateWrapper<PatientDO> patientUpdateWrapper = Wrappers.lambdaUpdate(PatientDO.class)
                 .eq(PatientDO::getId, patientDO.getId());
         patientMapper.update(patientDO, patientUpdateWrapper);
