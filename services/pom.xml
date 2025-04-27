@@ -16,6 +16,8 @@
         <module>department-services</module>
         <module>emr-services</module>
         <module>booking-services</module>
+        <module>registration-services</module>
+        <module>notice-services</module>
     </modules>
 
     <dependencies>
