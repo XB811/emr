@@ -15,6 +15,7 @@
         <module>user-services</module>
         <module>department-services</module>
         <module>emr-services</module>
+        <module>booking-services</module>
     </modules>
 
     <dependencies>
