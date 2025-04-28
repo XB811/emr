@@ -18,6 +18,7 @@
         <module>booking-services</module>
         <module>registration-services</module>
         <module>notice-services</module>
+        <module>evaluation-services</module>
     </modules>
 
     <dependencies>

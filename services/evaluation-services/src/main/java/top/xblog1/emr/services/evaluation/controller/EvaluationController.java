@@ -1,0 +1,56 @@
+package top.xblog1.emr.services.evaluation.controller;
+
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.*;
+import top.xblog1.emr.framework.starter.convention.result.Result;
+import top.xblog1.emr.framework.starter.web.Results;
+import top.xblog1.emr.services.evaluation.dto.req.EvaluationCreateReqDTO;
+import top.xblog1.emr.services.evaluation.dto.resp.EvaluationCreateRespDTO;
+import top.xblog1.emr.services.evaluation.dto.resp.EvaluationQueryRespDTO;
+import top.xblog1.emr.services.evaluation.services.EvaluationServices;
+
+/**
+ *
+ */
+@RestController
+@RequestMapping("/api/evaluation-services")
+@RequiredArgsConstructor
+public class EvaluationController {
+    private final EvaluationServices evaluationServices;
+    /**
+    * 新增评价
+    * @param requestParam 
+    * @return Result<EvaluationCreateRespDTO> 
+    */
+    @PostMapping("/v1/create")
+    public Result<EvaluationCreateRespDTO> createEvaluation(@RequestBody EvaluationCreateReqDTO requestParam) {
+        return Results.success(evaluationServices.create(requestParam));
+    }
+    
+    /**
+    * 删除评价
+    * @param id 
+    * @return Result<Void> 
+    */
+    @DeleteMapping("/v1/delete/{id}")
+    public Result<Void> deleteEvaluation(@PathVariable @Valid Long id){
+        evaluationServices.delete(id);
+        return Results.success();
+    }
+    //TODO 就诊评价修改接口 暂不考虑实现
+    
+    /**
+    * 根据id查询评价
+    * @param id 
+    * @return Result<EvaluationQueryRespDTO> 
+    */
+    @GetMapping("/v1/queryById/{id}")
+    public Result<EvaluationQueryRespDTO> queryById(@PathVariable @Valid Long id){
+        return Results.success(evaluationServices.queryById(id));
+    }
+    @GetMapping("/v1/queryByEmrId/{emrId}")
+    public Result<EvaluationQueryRespDTO> queryByEmrId(@PathVariable @Valid Long emrId){
+        return Results.success(evaluationServices.queryByEmrId(emrId));
+    }
+}

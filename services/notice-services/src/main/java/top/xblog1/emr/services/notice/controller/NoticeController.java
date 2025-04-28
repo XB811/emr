@@ -57,4 +57,5 @@ public class NoticeController {
     public Result<NoticeQueryRespDTO> queryById(@PathVariable @Valid Long id){
         return Results.success(noticeServices.queryById(id));
     }
+    //TODO 分页查询
 }
