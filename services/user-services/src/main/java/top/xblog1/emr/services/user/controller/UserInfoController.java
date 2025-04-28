@@ -32,9 +32,9 @@ public class UserInfoController {
      * @param userType 
     * @return Result<UserQueryRespDTO> 
     */
-    @GetMapping("/v1/query")
-    public Result<UserQueryRespDTO> queryUserByIDAndUserType(@RequestParam("id") @NotEmpty Long id,
-                                                             @RequestParam("userType") @NotEmpty String userType){
+    @GetMapping("/v1/query/{userType}/{id}")
+    public Result<UserQueryRespDTO> queryUserByIDAndUserType(@PathVariable @NotEmpty Long id,
+                                                             @PathVariable @NotEmpty String userType){
         return Results.success(userService.queryUserByIDAndUserType(id,userType));
     }
 
@@ -44,17 +44,17 @@ public class UserInfoController {
      * @param userType
     * @return Result<UserQueryActualRespDTO>
     */
-    @GetMapping("/v1/actual/query")
-    public Result<UserQueryActualRespDTO> queryActualUserByIDAndUserType(@RequestParam("id") @NotEmpty Long id,
-                                                                         @RequestParam("userType") @NotEmpty String userType){
+    @GetMapping("/v1/actual/query/{userType}/{id}")
+    public Result<UserQueryActualRespDTO> queryActualUserByIDAndUserType(@PathVariable @NotEmpty Long id,
+                                                                         @PathVariable @NotEmpty String userType){
         return Results.success(userService.queryActualUserByIDAndUserType(id,userType));
     }
     /**
      * 检查用户名是否已存在
      */
-    @GetMapping("/v1/has-username")
-    public Result<Boolean> hasUsername(@RequestParam("username") @NotEmpty String username ,
-                                       @RequestParam("userType") @NotEmpty String userType) {
+    @GetMapping("/v1/has-username/{userType}/{username}")
+    public Result<Boolean> hasUsername(@PathVariable @NotEmpty String username ,
+                                       @PathVariable @NotEmpty String userType) {
         return Results.success(userLoginService.hasUsername(username,userType));
     }
 
@@ -63,24 +63,30 @@ public class UserInfoController {
     * @param requestParam
     * @return Result<UserRegisterRespDTO>
     */
-    @PostMapping("/v1/register")
-    public Result<UserRegisterRespDTO> register(@RequestBody @Valid UserRegisterReqDTO requestParam) {
+    @PostMapping("/v1/register/{userType}")
+    public Result<UserRegisterRespDTO> register(@RequestBody @Valid UserRegisterReqDTO requestParam ,
+                                                @PathVariable @NotEmpty String userType) {
+        requestParam.setUserType(userType);
         return Results.success(userLoginService.register(requestParam));
     }
 
     /**
      * 根据id修改用户
      */
-    @PostMapping("/v1/update")
-    public Result<Void> update(@RequestBody @Valid UserUpdateReqDTO requestParam) {
+    @PutMapping("/v1/update/{userType}")
+    public Result<Void> update(@RequestBody @Valid UserUpdateReqDTO requestParam,
+                               @PathVariable @NotEmpty String userType) {
+        requestParam.setUserType(userType);
         userService.update(requestParam);
         return Results.success();
     }
     /**
      * 注销用户
      */
-    @PostMapping("/v1/deletion")
-    public Result<Void> deletion(@RequestBody @Valid UserDeletionReqDTO requestParam) {
+    @DeleteMapping("/v1/deletion/{userType}")
+    public Result<Void> deletion(@RequestBody @Valid UserDeletionReqDTO requestParam,
+                                 @PathVariable @NotEmpty String userType) {
+        requestParam.setUserType(userType);
         userLoginService.deletion(requestParam);
         return Results.success();
     }
