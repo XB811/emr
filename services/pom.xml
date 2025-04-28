@@ -19,6 +19,8 @@
         <module>registration-services</module>
         <module>notice-services</module>
         <module>evaluation-services</module>
+
+        <module>gateway-services</module>
     </modules>
 
     <dependencies>
