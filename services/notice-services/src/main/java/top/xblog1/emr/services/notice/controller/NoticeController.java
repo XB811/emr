@@ -16,7 +16,7 @@ import top.xblog1.emr.services.notice.services.NoticeServices;
  *
  */
 @RestController
-@RequestMapping("/api/notices-services")
+@RequestMapping("/api/notice-services")
 @RequiredArgsConstructor
 public class NoticeController {
     private final NoticeServices noticeServices;
