@@ -60,6 +60,11 @@ public class BookingController {
         return Results.success(bookingServices.queryById(id));
     }
 
+    /**
+    * 根据医生id查询时间表
+    * @param doctorId 
+    * @return Result<BookingQueryRespDTO> 
+    */
     @GetMapping("/v1/queryByDoctorId/{doctorId}")
     public Result<BookingQueryRespDTO> queryByDoctorId(@PathVariable @Valid Long doctorId){
         return Results.success(bookingServices.queryByDoctorId(doctorId));
