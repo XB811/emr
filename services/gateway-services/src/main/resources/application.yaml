@@ -1,0 +1,22 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: emr-gateway-services
+  profiles:
+    active: dev
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 118.145.210.214:8848  # Nacos?????
+      username: nacos  # Nacos?????
+      password: B21031618nacos  # Nacos????
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  metrics:
+    tags:
+      application: ${spring.application.name}
+#debug: true
