@@ -47,7 +47,7 @@ public class RegistrationController {
     * @return Result<RegistrationUpdateRespDTO> 
     */
     @PutMapping("/v1/update")
-    public Result<RegistrationUpdateRespDTO> updateRegistration(RegistrationUpdateReqDTO requestParam){
+    public Result<RegistrationUpdateRespDTO> updateRegistration(@RequestBody RegistrationUpdateReqDTO requestParam){
         return Results.success(registrationServices.update(requestParam));
     }
 
