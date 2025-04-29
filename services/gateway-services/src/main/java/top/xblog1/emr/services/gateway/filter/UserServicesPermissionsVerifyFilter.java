@@ -103,12 +103,12 @@ public class UserServicesPermissionsVerifyFilter extends AbstractGatewayFilterFa
         }
         String operatorUserType = userInfoDTO.getUserType();
         //如果是根用户，更改用户类型为root
-        if(operatorUserType==UserTypeEnum.ADMIN.code()&& Objects.equals(userInfoDTO.getUsername(), "root")){
+        if(Objects.equals(operatorUserType, UserTypeEnum.ADMIN.code()) && Objects.equals(userInfoDTO.getUsername(), "root")){
             operatorUserType="root";
         }
-        //获取被操作用户类型
-        //TODO 前端被操纵用户类型中，如果是root，必须写为root
+        //从路径中 获取被操作用户类型
         String twoUserType =getTwoUserType(request.getURI().getPath());
+
         //获取请求uri
         String apiPath = getApiUrl(request.getURI().getPath());
         //检测登录
@@ -136,12 +136,13 @@ public class UserServicesPermissionsVerifyFilter extends AbstractGatewayFilterFa
                     beginIndex = i+1;
                 }
                 if (slashCount >= 6) { // 找到第6个斜杠后
-                    endIndex=i-1;
+
                     break;
                 }
+                endIndex=i;
             }
         }
-        return slashCount < 5 ? path : path.substring(beginIndex, endIndex + 1);
+        return slashCount < 5 ? UserTypeEnum.GUEST.code() : path.substring(beginIndex, endIndex + 1);
     }
     /**
      * 获取接口路径
