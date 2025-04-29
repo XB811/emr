@@ -8,10 +8,12 @@ import top.xblog1.emr.framework.starter.cache.DistributedCache;
 import top.xblog1.emr.framework.starter.convention.exception.ClientException;
 import top.xblog1.emr.framework.starter.designpattern.strategy.AbstractStrategyChoose;
 import top.xblog1.emr.framework.starter.user.core.UserContext;
+import top.xblog1.emr.framework.starter.user.toolkit.JWTUtil;
 import top.xblog1.emr.services.user.common.enums.UserOperationTypeEnum;
 import top.xblog1.emr.services.user.dto.req.UserDeletionReqDTO;
 import top.xblog1.emr.services.user.dto.req.UserLoginReqDTO;
 import top.xblog1.emr.services.user.dto.req.UserRegisterReqDTO;
+import top.xblog1.emr.services.user.dto.resp.UserInfoQueryByTokenRespDTO;
 import top.xblog1.emr.services.user.dto.resp.UserLoginRespDTO;
 import top.xblog1.emr.services.user.dto.resp.UserRegisterRespDTO;
 import top.xblog1.emr.services.user.dto.strategy.BaseUserDTO;
@@ -19,6 +21,8 @@ import top.xblog1.emr.services.user.services.UserLoginService;
 
 import static top.xblog1.emr.services.user.common.constant.RedisKeyConstant.USER_LOGIN_TOKEN_PREFIX;
 import static top.xblog1.emr.services.user.common.constant.UserExecuteStrategyContant.USER_LOGIN_STRATEGY_SUFFIX;
+import static top.xblog1.emr.services.user.common.enums.UserErrorCodeEnum.ILLEGAL_TOKE;
+import static top.xblog1.emr.services.user.common.enums.UserErrorCodeEnum.TOKEN_EXPIRED;
 import static top.xblog1.emr.services.user.common.enums.UserOperationTypeEnum.USER_LOGIN;
 
 /**
@@ -117,9 +121,10 @@ public class UserLoginServiceImpl implements UserLoginService {
      * @return UserLoginRespDTO
      */
     @Override
-    public UserLoginRespDTO checkLogin(String accessToken) {
+    public Boolean checkLogin(String accessToken) {
         //直接查询token是否存在，不再调用策略
-        return distributedCache.get(accessToken,UserLoginRespDTO.class);
+        UserLoginRespDTO userLoginRespDTO = distributedCache.get(accessToken, UserLoginRespDTO.class);
+        return userLoginRespDTO != null;
     }
 
     /**
@@ -136,12 +141,20 @@ public class UserLoginServiceImpl implements UserLoginService {
             String userId = null;
             try {
                 userId = distributedCache.get(accessToken, UserLoginRespDTO.class).getUserId();
+                if(StrUtil.isBlank(userId)) {
+                    throw new ClientException(TOKEN_EXPIRED);
+                }
                 distributedCache.delete(USER_LOGIN_TOKEN_PREFIX+userType+":"+userId);
                 distributedCache.delete(accessToken);
             } catch (Exception e) {
-                throw new ClientException("token校验失败");
+                throw new ClientException(ILLEGAL_TOKE);
             }
 
         }
+    }
+
+    @Override
+    public UserInfoQueryByTokenRespDTO getUserInfoByToken(String token) {
+        return distributedCache.get(token,UserInfoQueryByTokenRespDTO.class);
     }
 }

@@ -4,12 +4,15 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import top.xblog1.emr.framework.starter.common.toolkit.BeanUtil;
 import top.xblog1.emr.framework.starter.convention.result.Result;
 import top.xblog1.emr.framework.starter.user.core.UserInfoDTO;
+import top.xblog1.emr.framework.starter.user.toolkit.JWTUtil;
 import top.xblog1.emr.framework.starter.web.Results;
 import top.xblog1.emr.services.user.dto.req.UserDeletionReqDTO;
 import top.xblog1.emr.services.user.dto.req.UserRegisterReqDTO;
 import top.xblog1.emr.services.user.dto.req.UserUpdateReqDTO;
+import top.xblog1.emr.services.user.dto.resp.UserInfoQueryByTokenRespDTO;
 import top.xblog1.emr.services.user.dto.resp.UserQueryActualRespDTO;
 import top.xblog1.emr.services.user.dto.resp.UserQueryRespDTO;
 import top.xblog1.emr.services.user.dto.resp.UserRegisterRespDTO;
@@ -89,6 +92,15 @@ public class UserInfoController {
         requestParam.setUserType(userType);
         userLoginService.deletion(requestParam);
         return Results.success();
+    }
+    /**
+    * 使用token获取用户信息
+    * @param token 
+    * @return Result<UserInfoQueryByTokenRespDTO> 
+    */
+    @GetMapping("/v1/getUserInfoByToken")
+    public Result<UserInfoQueryByTokenRespDTO> getUserInfoByToken(@RequestParam @NotEmpty String token) {
+        return Results.success(userLoginService.getUserInfoByToken(token));
     }
     // TODO 根据多种条件分页查询用户
 }
