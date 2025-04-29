@@ -34,16 +34,16 @@ public class UserLoginController {
      * 通过 Token 检查用户是否登录
      */
     @GetMapping("/v1/check-login/{userType}")
-    public Result<UserLoginRespDTO> checkLogin(@RequestParam("accessToken") String accessToken
+    public Result<Boolean> checkLogin(@RequestParam("accessToken") String accessToken
                                             , @PathVariable @NotEmpty String userType   ) {
-        UserLoginRespDTO result = userLoginService.checkLogin(accessToken);
-        return Results.success(result);
+
+        return Results.success(userLoginService.checkLogin(accessToken));
     }
 
     /**
      * 用户退出登录
      */
-    @GetMapping("/v1/logout/{userType}")
+    @PostMapping("/v1/logout/{userType}")
     public Result<Void> logout(@RequestParam(required = false) String accessToken,
                                 @PathVariable @NotEmpty String userType) {
         userLoginService.logout(accessToken,userType);

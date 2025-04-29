@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotEmpty;
 import top.xblog1.emr.services.user.dto.req.UserDeletionReqDTO;
 import top.xblog1.emr.services.user.dto.req.UserLoginReqDTO;
 import top.xblog1.emr.services.user.dto.req.UserRegisterReqDTO;
+import top.xblog1.emr.services.user.dto.resp.UserInfoQueryByTokenRespDTO;
 import top.xblog1.emr.services.user.dto.resp.UserLoginRespDTO;
 import top.xblog1.emr.services.user.dto.resp.UserRegisterRespDTO;
 
@@ -49,7 +50,7 @@ public interface UserLoginService {
      * @param accessToken
      * @return UserLoginRespDTO
      */
-    UserLoginRespDTO checkLogin(String accessToken);
+    Boolean checkLogin(String accessToken);
 
     /**
      * 退出登录
@@ -59,4 +60,6 @@ public interface UserLoginService {
      * @return
      */
     void logout(String accessToken, @NotEmpty String userType);
+
+    UserInfoQueryByTokenRespDTO getUserInfoByToken(@NotEmpty String token);
 }
