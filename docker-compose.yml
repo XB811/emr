@@ -47,7 +47,7 @@ services:
       resources:
         limits:
           cpus: '1'  # 限制CPU使用率
-          memory: 2G  # 限制内存使用
+          memory: 1.5G  # 限制内存使用
   # MySQL数据库服务配置
   # 提供关系型数据存储，用于持久化EMR系统中的结构化数据
   mysql:
