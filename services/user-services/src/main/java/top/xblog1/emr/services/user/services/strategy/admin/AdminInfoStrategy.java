@@ -67,7 +67,7 @@ public class AdminInfoStrategy extends AbstractUserExecuteStrategy {
                 .getUserQueryActualRespDTO()
                 .getPhone();
         //更新redis中的手机号
-        if(!Objects.equals(phone, requestParam.getPhone())){
+        if(requestParam.getPhone()!=null&&!Objects.equals(phone, requestParam.getPhone())){
             instance.opsForSet().remove(USER_REGISTER_PHONE_ADMIN, phone);
             Long add = instance.opsForSet().add(USER_REGISTER_PHONE_ADMIN, requestParam.getPhone());
             if(add==null||add==0){

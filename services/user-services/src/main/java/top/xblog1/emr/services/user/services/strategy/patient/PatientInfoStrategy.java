@@ -71,7 +71,7 @@ public class PatientInfoStrategy extends AbstractUserExecuteStrategy {
                     .getUserQueryActualRespDTO()
                     .getPhone();
             //更新布隆过滤器和复用表中的手机号
-            if (!Objects.equals(oldPhone, requestParam.getPhone())) {
+            if (requestParam.getPhone()!=null&&!Objects.equals(oldPhone, requestParam.getPhone())) {
                 String newPhone = requestParam.getPhone();
                 //查询新号码是否可用
                 if (patientRegisterPhoneCachePenetrationBloomFilter.contains(newPhone)) {
