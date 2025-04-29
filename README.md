@@ -209,7 +209,9 @@ create table admin
     phone       varchar(128) null comment '手机号',
     create_time datetime     null comment '新增时间',
     update_time datetime     null comment '更新时间',
-    del_flag    tinyint(1)   null comment '删除标识'
+    del_flag    tinyint(1)   null comment '删除标识',
+    constraint unique_admin_username
+        unique (username)
 );
 
 create table booking
@@ -222,19 +224,26 @@ create table booking
     is_available   tinyint(1)   null comment '当前是否可预约',
     create_time    datetime     null comment '新增时间',
     update_time    datetime     null comment '更新时间',
-    del_flag       tinyint(1)   null comment '删除标识'
+    del_flag       tinyint(1)   null comment '删除标识',
+    constraint unique_doctor_id
+        unique (doctor_id) comment 'doctor_id 唯一'
 );
 
 create table department
 (
     id          bigint       not null comment '主键'
         primary key,
+    code        varchar(255) null comment '科室编码',
     name        varchar(255) null comment '科室名称',
-    `describe`  text         null comment '科室介绍',
+    detail      text         null comment '科室介绍',
     address     varchar(255) null comment '科室位置',
     create_time datetime     null comment '新增时间',
     update_time datetime     null comment '更新时间',
-    del_flag    tinyint(1)   null comment '删除标识'
+    del_flag    tinyint(1)   null comment '删除标识',
+    constraint unique_code
+        unique (code),
+    constraint unique_name
+        unique (name)
 );
 
 create table doctor
@@ -252,17 +261,21 @@ create table doctor
 ',
     create_time   datetime     null comment '新增时间',
     update_time   datetime     null comment '更新时间',
-    del_flag      tinyint(1)   null comment '删除标识'
+    del_flag      tinyint(1)   null comment '删除标识',
+    constraint unique_doctor_phone
+        unique (phone)
 );
 
 create table emr
 (
     id              bigint       not null comment '主键'
         primary key,
-    user_id         bigint       not null comment '患者ID',
+    patient_id      bigint       not null comment '患者ID',
     real_name       varchar(255) null comment '患者姓名',
+    gender          tinyint(1)   null comment '患者性别',
     age             int          null comment '患者年龄',
     department_id   bigint       null comment '科室ID',
+    department_code varchar(255) null comment '科室编号',
     department_name text         null comment '科室名',
     content         text         null comment '主诉/病情关键信息',
     present_history text         null comment '现病史',
@@ -271,7 +284,7 @@ create table emr
     diagnosis       text         null comment '诊断',
     treatment_plan  text         null comment '治疗方案',
     doctor_advice   text         null comment '医嘱',
-    doctor_id       int          not null comment '医生ID',
+    doctor_id       bigint       not null comment '医生ID',
     doctor_name     varchar(255) null comment '医生姓名',
     create_time     datetime     null comment '新增时间',
     update_time     datetime     null comment '更新时间',
@@ -282,13 +295,15 @@ create table evaluation
 (
     id          bigint     not null comment '主键'
         primary key,
-    user_id     bigint     null comment '患者ID',
+    patient_id  bigint     null comment '患者ID',
     doctor_id   bigint     null comment '医生ID',
     emr_id      bigint     null comment '电子病历ID',
     content     text       null comment '评价内容',
     create_time datetime   null comment '新增时间',
     update_time datetime   null comment '更新时间',
-    del_flag    tinyint(1) null comment '删除标识'
+    del_flag    tinyint(1) null comment '删除标识',
+    constraint evaluation_pk
+        unique (emr_id)
 );
 
 create table notice
@@ -296,6 +311,7 @@ create table notice
     id          bigint       not null comment '主键'
         primary key,
     admin_id    bigint       null comment '管理员id',
+    admin_name  varchar(255) null comment '管理员真实姓名',
     title       varchar(255) null comment '公告标题',
     content     text         null comment '公告内容',
     create_time datetime     null comment '新增时间',
@@ -318,14 +334,24 @@ create table patient
     del_flag    tinyint(1)   null comment '删除标识'
 );
 
+create table patient_phone_reuse
+(
+    phone       varchar(128) not null
+        primary key,
+    create_time datetime     null,
+    update_time datetime     null,
+    del_flag    tinyint(1)   null
+);
+
 create table registration
 (
     id               bigint     not null comment '主键'
         primary key,
-    user_id          bigint     null comment '患者ID',
+    patient_id       bigint     null comment '患者ID',
     doctor_id        bigint     null comment '医生ID',
     appointment_date date       null comment '预约时间',
     appointment_time tinyint    null comment '预约时间段',
+    is_finish        tinyint(1) null comment '是否完成',
     create_time      datetime   null comment '新增时间',
     update_time      datetime   null comment '更新时间',
     del_flag         tinyint(1) null comment '删除标识'
