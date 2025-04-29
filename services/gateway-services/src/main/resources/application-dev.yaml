@@ -116,30 +116,47 @@ emr:
     strict-mode: true
   user-services:
     path-permissions:
+      # 操作userType中多分出一个root，被操纵userType中都是admin
+      # root有admin的全部权限，普通admin并没有注册、和注销的权限
+      # root的注销权限在user-services代码中写死禁止了
       "root":
-        "root": ["/api/user-services/v1/query","/api/user-services/v1/actual/query","/api/user-services/v1/has-username","/api/user-services/v1/has-username","/api/user-services/v1/update","/api/user-services/v1/login","/api/user-services/v1/check-login","/api/user-services/v1/logout"]
-        "admin":  ["/api/user-services/v1/query","/api/user-services/v1/actual/query","/api/user-services/v1/has-username","/api/user-services/v1/has-username","/api/user-services/v1/register","/api/user-services/v1/update"]
-        "doctor": ["/api/user-services/v1/query","/api/user-services/v1/actual/query","/api/user-services/v1/has-username","/api/user-services/v1/has-username","/api/user-services/v1/register","/api/user-services/v1/update","/api/user-services/v1/login","/api/user-services/v1/check-login"]
-        "patient": ["/api/user-services/v1/query","/api/user-services/v1/actual/query","/api/user-services/v1/has-username","/api/user-services/v1/has-username"]
+        # root有admin全部权限 ，登录权限都是只有访客的
+        "admin":   ["/api/user-services/v1/query","/api/user-services/v1/actual/query","/api/user-services/v1/has-username","/api/user-services/v1/register","/api/user-services/v1/update","/api/user-services/v1/deletion",                              "/api/user-services/v1/check-login","/api/user-services/v1/logout"]
+        # root 有doctor全部权限
+        "doctor":  ["/api/user-services/v1/query","/api/user-services/v1/actual/query","/api/user-services/v1/has-username","/api/user-services/v1/register","/api/user-services/v1/update","/api/user-services/v1/deletion",                              "/api/user-services/v1/check-login","/api/user-services/v1/logout"]
+        # root 不可以注册patient账户
+        "patient": ["/api/user-services/v1/query","/api/user-services/v1/actual/query","/api/user-services/v1/has-username",                                 "/api/user-services/v1/update","/api/user-services/v1/deletion",                             "/api/user-services/v1/check-login","/api/user-services/v1/logout"]
+        # 如果前端无法获取被操作用户类型，设为guest
+        "guest": ["/api/user-services/v1/getUserInfoByToken"]
       "admin":
-        "admin": ["/api/user-services/v1/query","/api/user-services/v1/actual/query","/api/user-services/v1/has-username","/api/user-services/v1/has-username","/api/user-services/v1/update","/api/user-services/v1/login","/api/user-services/v1/check-login","/api/user-services/v1/logout"]
-        "doctor":  ["/api/user-services/v1/query","/api/user-services/v1/actual/query","/api/user-services/v1/has-username","/api/user-services/v1/has-username","/api/user-services/v1/register","/api/user-services/v1/update"]
-        "patient": ["/api/user-services/v1/query","/api/user-services/v1/actual/query","/api/user-services/v1/has-username","/api/user-services/v1/has-username","/api/user-services/v1/update","/api/user-services/v1/check-login"]
+        # admin 不能注册和注销admin账户
+        "admin":   ["/api/user-services/v1/query","/api/user-services/v1/actual/query","/api/user-services/v1/has-username",                                 "/api/user-services/v1/update",                                                               "/api/user-services/v1/check-login","/api/user-services/v1/logout"]
+        # admin 拥有doctor全部权限 但是不能注销doctor
+        "doctor":  ["/api/user-services/v1/query","/api/user-services/v1/actual/query","/api/user-services/v1/has-username","/api/user-services/v1/register","/api/user-services/v1/update",                                                               "/api/user-services/v1/check-login","/api/user-services/v1/logout"]
+        # admin  不能注册和注销patient
+        "patient": ["/api/user-services/v1/query","/api/user-services/v1/actual/query","/api/user-services/v1/has-username",                                 "/api/user-services/v1/update","/api/user-services/v1/deletion",                              "/api/user-services/v1/check-login","/api/user-services/v1/logout"]
+        "guest": ["/api/user-services/v1/getUserInfoByToken"]
        # 医生只有自己的全部权限和查看用户
         # 医生账户不能自行注册，只有管理员可以注册医生账户
       "doctor":
-        "doctor": ["/api/user-services/v1/query","/api/user-services/v1/actual/query","/api/user-services/v1/has-username","/api/user-services/v1/has-username","/api/user-services/v1/register","/api/user-services/v1/update","/api/user-services/v1/login","/api/user-services/v1/check-login","/api/user-services/v1/logout"]
-        "patient": ["/api/user-services/v1/query"]
+         # 医生有自己的全部权限 但是不能注册和注销自己
+        "doctor":  ["/api/user-services/v1/query","/api/user-services/v1/actual/query","/api/user-services/v1/has-username",                                  "/api/user-services/v1/update",                                                              "/api/user-services/v1/check-login","/api/user-services/v1/logout"]
+        # doctor 只有查询患者的相关权限
+        "patient": ["/api/user-services/v1/query","/api/user-services/v1/actual/query","/api/user-services/v1/has-username",                                                                                                                               "/api/user-services/v1/check-login","/api/user-services/v1/logout"]
       # 患者只有自己的全部功能和查看医生信息
       "patient":
-        "doctor": ["/api/user-services/v1/query"]
-        "patient": ["/api/user-services/v1/query","/api/user-services/v1/actual/query","/api/user-services/v1/has-username","/api/user-services/v1/has-username","/api/user-services/v1/register","/api/user-services/v1/update","/api/user-services/v1/login","/api/user-services/v1/check-login","/api/user-services/v1/logout"]
-        # 游客只能登录 和注册患者账户
+        # patient 只能查询doctor
+        "doctor":  ["/api/user-services/v1/query","/api/user-services/v1/actual/query","/api/user-services/v1/has-username",                                                                                                                               "/api/user-services/v1/check-login","/api/user-services/v1/logout"]
+        # patient 有自己的全部权限
+        "patient": ["/api/user-services/v1/query","/api/user-services/v1/actual/query","/api/user-services/v1/has-username","/api/user-services/v1/register","/api/user-services/v1/update","/api/user-services/v1/deletion",                              "/api/user-services/v1/check-login","/api/user-services/v1/logout"]
+        "guest": ["/api/user-services/v1/getUserInfoByToken"]
+      # 登录权限只对guest开放
+      # guest可以注册patient账户
       "guest":
-        "root": ["/api/user-services/v1/login"]
-        "admin": ["/api/user-services/v1/login"]
-        "doctor": ["/api/user-services/v1/login"]
-        "patient": ["/api/user-services/v1/login","/api/user-services/v1/register"]
+        "admin":   ["/api/user-services/v1/login"]
+        "doctor":  ["/api/user-services/v1/login"]
+        "patient": ["/api/user-services/v1/login","/api/user-services/v1/has-username","/api/user-services/v1/register"]
+        "guest": ["/api/user-services/v1/getUserInfoByToken"]
     # 是否启用严格模式(未明确配置的路径将被拒绝)
     strict-mode: true
 
