@@ -227,6 +227,6 @@ public class PatientLoginStrategy extends AbstractUserExecuteStrategy {
         distributedCache.put(tokenName,accessToken,30, TimeUnit.MINUTES);
         //包装返回
         return BaseUserDTO.builder()
-                .userLoginRespDTO(actual).build();
+                .userLoginRespDTO(UserLoginRespDTO.builder().accessToken(accessToken).build()).build();
     }
 }
