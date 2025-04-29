@@ -1,8 +1,6 @@
 package top.xblog1.emr.services.user.services.strategy.patient;
 
-import cn.hutool.jwt.JWT;
 import com.alibaba.fastjson2.JSON;
-import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import jakarta.annotation.PostConstruct;
@@ -27,7 +25,6 @@ import top.xblog1.emr.framework.starter.user.core.UserInfoDTO;
 import top.xblog1.emr.framework.starter.user.toolkit.JWTUtil;
 import top.xblog1.emr.services.user.common.constant.UserExecuteStrategyContant;
 import top.xblog1.emr.services.user.common.enums.UserChainMarkEnum;
-import top.xblog1.emr.services.user.dao.entity.AdminDO;
 import top.xblog1.emr.services.user.dao.entity.PatientDO;
 import top.xblog1.emr.services.user.dao.entity.PatientPhoneReuseDO;
 import top.xblog1.emr.services.user.dao.mapper.PatientMapper;
@@ -161,10 +158,10 @@ public class PatientLoginStrategy extends AbstractUserExecuteStrategy {
             StringRedisTemplate instance = (StringRedisTemplate) distributedCache.getInstance();
             instance.opsForSet().add(PATIENT_REGISTER_PHONE_REUSE_SHARDING+hashShardingIdx(phone), phone);
             // 删除登录token
-            String token =distributedCache.get(USER_LOGIN_PATIEN_TOKEN_PREFIXT+patientDO.getId(),String.class);
+            String token =distributedCache.get(USER_LOGIN_PATIEN_TOKEN_PREFIX +patientDO.getId(),String.class);
             if(!Objects.isNull(token)){
                 distributedCache.delete(token);
-                distributedCache.delete(USER_LOGIN_PATIEN_TOKEN_PREFIXT+patientDO.getId());
+                distributedCache.delete(USER_LOGIN_PATIEN_TOKEN_PREFIX +patientDO.getId());
             }
 
         }finally {
@@ -220,7 +217,7 @@ public class PatientLoginStrategy extends AbstractUserExecuteStrategy {
                 .accessToken(accessToken)
                 .build();
         //删除缓存中可能存在的之前登录的token
-        String tokenName=USER_LOGIN_PATIEN_TOKEN_PREFIXT +patientDO.getId();
+        String tokenName= USER_LOGIN_PATIEN_TOKEN_PREFIX +patientDO.getId();
         if(distributedCache.get(tokenName,String.class)!=null){
             distributedCache.delete(distributedCache.get(tokenName,String.class));
             distributedCache.delete(tokenName);
