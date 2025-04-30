@@ -11,6 +11,12 @@ spring:
         server-addr: 118.145.210.214:8848  # Nacos?????
       username: nacos  # Nacos?????
       password: B21031618nacos  # Nacos????
+  # Redis????
+  data:
+    redis:
+      host: 118.145.210.214  # Redis?????
+      port: 6379  # Redis?????
+      password: B21031618redis  # Redis????
 management:
   endpoints:
     web:

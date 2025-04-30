@@ -1,6 +1,5 @@
 package top.xblog1.emr.services.gateway.filter;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
@@ -11,9 +10,8 @@ import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import top.xblog1.emr.framework.starter.base.constant.UserConstant;
+import top.xblog1.emr.framework.starter.cache.DistributedCache;
 import top.xblog1.emr.framework.starter.common.enums.UserTypeEnum;
-import top.xblog1.emr.framework.starter.convention.exception.ClientException;
-import top.xblog1.emr.services.gateway.toolkit.JWTUtil;
 import top.xblog1.emr.services.gateway.toolkit.UserInfoDTO;
 
 import java.net.URLEncoder;
@@ -31,6 +29,9 @@ public class GeneralServicesPermissionsVerifyFilter extends AbstractGatewayFilte
 
     @Autowired
     private GeneralServicesPermissionConfig permissionConfig;
+
+    @Autowired
+    private DistributedCache distributedCache;
 
     public GeneralServicesPermissionsVerifyFilter() {
         super(Config.class);
@@ -57,7 +58,10 @@ public class GeneralServicesPermissionsVerifyFilter extends AbstractGatewayFilte
             // TODO 需要验证 Token 是否有效，有可能用户注销了账户，但是 Token 有效期还未过
 
             //解析token
-            UserInfoDTO userInfo = JWTUtil.parseJwtToken(token);
+//            UserInfoDTO userInfo = JWTUtil.parseJwtToken(token);
+            // 修改为从缓存中获取token，方便后续将 JWTUtil 更换为其他的 token 生成方式
+            UserInfoDTO userInfo = distributedCache.get(token, UserInfoDTO.class);
+            // 因为后续需要做权限校验，故不做token的校验
             ServerHttpRequest.Builder builder;
             //如果token不存在
             if (!validateToken(userInfo)) {
