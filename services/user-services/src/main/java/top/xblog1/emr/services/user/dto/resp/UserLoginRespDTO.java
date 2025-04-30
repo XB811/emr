@@ -6,7 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * 用户登录实体
+ *
  */
 @Data
 @NoArgsConstructor

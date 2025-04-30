@@ -3,7 +3,7 @@ package top.xblog1.emr.services.user.dto.resp;
 import lombok.Data;
 
 /**
- * 用户无脱敏信息返回实体
+ *
  */
 @Data
 public class UserQueryActualRespDTO {
@@ -11,10 +11,6 @@ public class UserQueryActualRespDTO {
      * 用户名
      */
     private String username;
-    /**
-     * 密码
-     */
-    private String password;
     /**
      * 用户类型
      */

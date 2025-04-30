@@ -88,9 +88,12 @@ public class UserInfoController {
      * 注销用户
      */
     @DeleteMapping("/v1/deletion/{userType}")
-    public Result<Void> deletion(@RequestBody @Valid UserDeletionReqDTO requestParam,
+    public Result<Void> deletion(@RequestParam @Valid String username,
                                  @PathVariable @NotEmpty String userType) {
-        requestParam.setUserType(userType);
+        UserDeletionReqDTO requestParam=UserDeletionReqDTO.builder()
+                                        .username(username)
+                                        .userType(userType)
+                                        .build();
         userLoginService.deletion(requestParam);
         return Results.success();
     }

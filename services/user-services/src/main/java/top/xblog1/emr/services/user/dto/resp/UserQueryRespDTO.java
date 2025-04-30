@@ -7,7 +7,7 @@ import top.xblog1.emr.services.user.serialize.IdCardDesensitizationSerializer;
 import top.xblog1.emr.services.user.serialize.PhoneDesensitizationSerializer;
 
 /**
- * 用户信息返回实体
+ *
  */
 @Data
 public class UserQueryRespDTO {
@@ -15,10 +15,6 @@ public class UserQueryRespDTO {
      * 用户名
      */
     private String username;
-    /**
-     * 密码
-     */
-    private String password;
     /**
      * 用户类型
      */
