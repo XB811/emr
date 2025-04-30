@@ -124,7 +124,10 @@ public class UserLoginServiceImpl implements UserLoginService {
     public Boolean checkLogin(String accessToken) {
         //直接查询token是否存在，不再调用策略
         UserLoginRespDTO userLoginRespDTO = distributedCache.get(accessToken, UserLoginRespDTO.class);
-        return userLoginRespDTO != null;
+        if(userLoginRespDTO == null) {
+            throw new ClientException(TOKEN_EXPIRED);
+        }
+        return true;
     }
 
     /**
@@ -140,10 +143,11 @@ public class UserLoginServiceImpl implements UserLoginService {
         if (StrUtil.isNotBlank(accessToken)) {
             String userId = null;
             try {
-                userId = distributedCache.get(accessToken, UserLoginRespDTO.class).getUserId();
-                if(StrUtil.isBlank(userId)) {
+                UserLoginRespDTO userLoginRespDTO = distributedCache.get(accessToken, UserLoginRespDTO.class);
+                if(userLoginRespDTO==null) {
                     throw new ClientException(TOKEN_EXPIRED);
                 }
+                userId =userLoginRespDTO.getUserId();
                 distributedCache.delete(USER_LOGIN_TOKEN_PREFIX+userType+":"+userId);
                 distributedCache.delete(accessToken);
             } catch (Exception e) {

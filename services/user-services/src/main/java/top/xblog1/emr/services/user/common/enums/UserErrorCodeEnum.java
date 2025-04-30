@@ -9,7 +9,7 @@ import top.xblog1.emr.framework.starter.convention.errorcode.IErrorCode;
  */
 @AllArgsConstructor
 public enum UserErrorCodeEnum implements IErrorCode {
-    ILLEGAL_TOKE("A100001","非法token"),
+    ILLEGAL_TOKE("A100001","token不存在"),
     OTHER_CLIENTS_LOGGED_IN("A100002","其他客户端登录"),
     TOKEN_EXPIRED("A100003","Token过期"),
     ;
