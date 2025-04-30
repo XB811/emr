@@ -1,13 +1,15 @@
 package top.xblog1.emr.services.user.services.impl;
 
+import jakarta.validation.constraints.NotEmpty;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import top.xblog1.emr.framework.starter.common.toolkit.BeanUtil;
 import top.xblog1.emr.framework.starter.designpattern.chain.AbstractChainContext;
 import top.xblog1.emr.framework.starter.designpattern.strategy.AbstractStrategyChoose;
-import top.xblog1.emr.services.user.common.enums.UserChainMarkEnum;
+import top.xblog1.emr.framework.starter.user.core.UserContext;
 import top.xblog1.emr.services.user.common.enums.UserOperationTypeEnum;
-import top.xblog1.emr.services.user.dto.req.UserRegisterReqDTO;
+import top.xblog1.emr.services.user.dto.req.UpdatePasswordReqDTO;
 import top.xblog1.emr.services.user.dto.req.UserUpdateReqDTO;
 import top.xblog1.emr.services.user.dto.resp.UserQueryActualRespDTO;
 import top.xblog1.emr.services.user.dto.resp.UserQueryRespDTO;
@@ -21,6 +23,7 @@ import static top.xblog1.emr.services.user.common.constant.UserExecuteStrategyCo
  */
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class UserInfoServiceImpl implements UserService {
     private final AbstractStrategyChoose strategyChoose;
     private final AbstractChainContext abstractChainContext;
@@ -71,5 +74,15 @@ public class UserInfoServiceImpl implements UserService {
         BaseUserDTO response = strategyChoose.chooseAndExecuteResp(userType+ USER_INFO_STRATEGY_SUFFIX
                 , request);
         return response.getUserQueryActualRespDTO();
+    }
+
+    @Override
+    public void updatePassword(UpdatePasswordReqDTO requestParam, @NotEmpty String userType) {
+        BaseUserDTO request =BaseUserDTO.builder()
+                .updatePasswordReqDTO(requestParam)
+                .operationType(UserOperationTypeEnum.USER_PASSWORD_UPDATE)
+                .build();
+        strategyChoose.chooseAndExecute(userType+USER_INFO_STRATEGY_SUFFIX,
+                request);
     }
 }

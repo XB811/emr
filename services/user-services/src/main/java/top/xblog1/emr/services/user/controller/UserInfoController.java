@@ -9,6 +9,7 @@ import top.xblog1.emr.framework.starter.convention.result.Result;
 import top.xblog1.emr.framework.starter.user.core.UserInfoDTO;
 import top.xblog1.emr.framework.starter.user.toolkit.JWTUtil;
 import top.xblog1.emr.framework.starter.web.Results;
+import top.xblog1.emr.services.user.dto.req.UpdatePasswordReqDTO;
 import top.xblog1.emr.services.user.dto.req.UserDeletionReqDTO;
 import top.xblog1.emr.services.user.dto.req.UserRegisterReqDTO;
 import top.xblog1.emr.services.user.dto.req.UserUpdateReqDTO;
@@ -103,4 +104,11 @@ public class UserInfoController {
         return Results.success(userLoginService.getUserInfoByToken(token));
     }
     // TODO 根据多种条件分页查询用户
+
+    @PutMapping("/v1/updatePassword/{userType}")
+    public Result<Void> updatePassword(@RequestBody @Valid UpdatePasswordReqDTO requestParam,
+                                       @PathVariable @NotEmpty String userType) {
+        userService.updatePassword(requestParam,userType);
+        return Results.success();
+    }
 }

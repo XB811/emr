@@ -6,10 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import top.xblog1.emr.framework.starter.database.base.BaseDO;
 import top.xblog1.emr.services.user.common.enums.UserOperationTypeEnum;
-import top.xblog1.emr.services.user.dto.req.UserDeletionReqDTO;
-import top.xblog1.emr.services.user.dto.req.UserLoginReqDTO;
-import top.xblog1.emr.services.user.dto.req.UserRegisterReqDTO;
-import top.xblog1.emr.services.user.dto.req.UserUpdateReqDTO;
+import top.xblog1.emr.services.user.dto.req.*;
 import top.xblog1.emr.services.user.dto.resp.UserLoginRespDTO;
 import top.xblog1.emr.services.user.dto.resp.UserQueryActualRespDTO;
 import top.xblog1.emr.services.user.dto.resp.UserQueryRespDTO;
@@ -31,6 +28,7 @@ public class BaseUserDTO {
     private UserLoginRespDTO userLoginRespDTO;
     private UserQueryActualRespDTO userQueryActualRespDTO;
     private UserRegisterRespDTO userRegisterRespDTO;
+    private UpdatePasswordReqDTO updatePasswordReqDTO;
     //用户id
     private Long id;
     //用户名

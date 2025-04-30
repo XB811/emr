@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RLock;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import top.xblog1.emr.framework.starter.cache.DistributedCache;
@@ -14,10 +15,12 @@ import top.xblog1.emr.framework.starter.common.toolkit.BeanUtil;
 import top.xblog1.emr.framework.starter.convention.exception.ClientException;
 import top.xblog1.emr.framework.starter.convention.exception.ServiceException;
 import top.xblog1.emr.framework.starter.designpattern.chain.AbstractChainContext;
+import top.xblog1.emr.framework.starter.user.core.UserContext;
 import top.xblog1.emr.services.user.common.constant.UserExecuteStrategyContant;
 import top.xblog1.emr.services.user.common.enums.UserChainMarkEnum;
 import top.xblog1.emr.services.user.dao.entity.AdminDO;
 import top.xblog1.emr.services.user.dao.mapper.AdminMapper;
+import top.xblog1.emr.services.user.dto.req.UpdatePasswordReqDTO;
 import top.xblog1.emr.services.user.dto.req.UserRegisterReqDTO;
 import top.xblog1.emr.services.user.dto.req.UserUpdateReqDTO;
 import top.xblog1.emr.services.user.dto.resp.UserQueryActualRespDTO;
@@ -40,6 +43,7 @@ import static top.xblog1.emr.services.user.common.enums.UserRegisterErrorCodeEnu
  */
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class AdminInfoStrategy extends AbstractUserExecuteStrategy {
     private final AdminMapper adminMapper;
     private final DistributedCache distributedCache;
@@ -95,5 +99,39 @@ public class AdminInfoStrategy extends AbstractUserExecuteStrategy {
         return BaseUserDTO.builder()
                 .userQueryActualRespDTO(BeanUtil.convert(adminDO, UserQueryActualRespDTO.class))
                 .build();
+    }
+    public void updatePassword(BaseUserDTO request){
+        UpdatePasswordReqDTO requestParam = request.getUpdatePasswordReqDTO();
+        if(requestParam.getOldPassword() ==null || requestParam.getOldPassword().isEmpty()){
+            throw new ClientException("旧密码不能为空");
+        }else if(requestParam.getNewPassword() ==null || requestParam.getNewPassword().isEmpty()){
+            throw new ClientException("新密码不能为空");
+        }else if(requestParam.getConfirmPassword() ==null || requestParam.getConfirmPassword().isEmpty()) {
+            throw new ClientException("重复密码不能为空");
+        }else if(requestParam.getNewPassword().length()<6|| requestParam.getNewPassword().length()>16){
+            throw new ClientException("新密码的长度为6-16位之间");
+        }else if(!requestParam.getNewPassword().equals(requestParam.getConfirmPassword())){
+            throw new ClientException("重复密码和新密码输入不一致");
+        }
+        LambdaQueryWrapper<AdminDO> queryWrapper = Wrappers.lambdaQuery(AdminDO.class)
+                .eq(AdminDO::getId, UserContext.getUserId());
+        AdminDO adminDO =null;
+        log.info(UserContext.getUserId()+"<UNK>");
+        try {
+            adminDO = adminMapper.selectOne(queryWrapper);
+        } catch (Exception e) {
+            throw new ClientException("当前登录用户信息丢失");
+        }
+        if(adminDO==null){
+            throw new ClientException("当前登录用户信息丢失");
+        }
+        if(Objects.equals(adminDO.getUsername(), "root")){
+            throw new ClientException("root账户密码不可被更改");
+        }
+        if(!PasswordEncryptUtil.verifyPassword(requestParam.getOldPassword(),adminDO.getPassword())){
+            throw new ClientException("旧密码错误");
+        }
+        adminDO.setPassword(PasswordEncryptUtil.encryptPassword(requestParam.getNewPassword()));
+        adminMapper.updateById(adminDO);
     }
 }

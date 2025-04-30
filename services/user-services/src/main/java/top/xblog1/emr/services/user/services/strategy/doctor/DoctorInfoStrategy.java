@@ -11,10 +11,12 @@ import top.xblog1.emr.framework.starter.cache.DistributedCache;
 import top.xblog1.emr.framework.starter.common.enums.UserTypeEnum;
 import top.xblog1.emr.framework.starter.common.toolkit.BeanUtil;
 import top.xblog1.emr.framework.starter.convention.exception.ClientException;
+import top.xblog1.emr.framework.starter.user.core.UserContext;
 import top.xblog1.emr.services.user.common.constant.UserExecuteStrategyContant;
 import top.xblog1.emr.services.user.dao.entity.AdminDO;
 import top.xblog1.emr.services.user.dao.entity.DoctorDO;
 import top.xblog1.emr.services.user.dao.mapper.DoctorMapper;
+import top.xblog1.emr.services.user.dto.req.UpdatePasswordReqDTO;
 import top.xblog1.emr.services.user.dto.req.UserUpdateReqDTO;
 import top.xblog1.emr.services.user.dto.resp.UserQueryActualRespDTO;
 import top.xblog1.emr.services.user.dto.strategy.BaseUserDTO;
@@ -93,5 +95,36 @@ public class DoctorInfoStrategy extends AbstractUserExecuteStrategy {
         return BaseUserDTO.builder()
                 .userQueryActualRespDTO(BeanUtil.convert(doctorDO, UserQueryActualRespDTO.class))
                 .build();
+    }
+
+    public void updatePassword(BaseUserDTO request){
+        UpdatePasswordReqDTO requestParam = request.getUpdatePasswordReqDTO();
+        if(requestParam.getOldPassword() ==null || requestParam.getOldPassword().isEmpty()){
+            throw new ClientException("旧密码不能为空");
+        }else if(requestParam.getNewPassword() ==null || requestParam.getNewPassword().isEmpty()){
+            throw new ClientException("新密码不能为空");
+        }else if(requestParam.getConfirmPassword() ==null || requestParam.getConfirmPassword().isEmpty()) {
+            throw new ClientException("重复密码不能为空");
+        }else if(requestParam.getNewPassword().length()<6|| requestParam.getNewPassword().length()>16){
+            throw new ClientException("新密码的长度为6-16位之间");
+        }else if(!requestParam.getNewPassword().equals(requestParam.getConfirmPassword())){
+            throw new ClientException("重复密码和新密码输入不一致");
+        }
+        LambdaQueryWrapper<DoctorDO> queryWrapper = Wrappers.lambdaQuery(DoctorDO.class)
+                .eq(DoctorDO::getId, UserContext.getUserId());
+        DoctorDO doctorDO = null;
+        try {
+            doctorDO = doctorMapper.selectOne(queryWrapper);
+        } catch (Exception e) {
+            throw new ClientException("当前登录用户信息丢失");
+        }
+        if(doctorDO==null){
+            throw new ClientException("当前登录用户信息丢失");
+        }
+        if(!PasswordEncryptUtil.verifyPassword(requestParam.getOldPassword(),doctorDO.getPassword())){
+            throw new ClientException("旧密码错误");
+        }
+        doctorDO.setPassword(PasswordEncryptUtil.encryptPassword(requestParam.getNewPassword()));
+        doctorMapper.updateById(doctorDO);
     }
 }
