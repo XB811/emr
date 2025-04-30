@@ -14,6 +14,7 @@ import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 import top.xblog1.emr.framework.starter.base.constant.UserConstant;
 import top.xblog1.emr.framework.starter.common.enums.UserTypeEnum;
+import top.xblog1.emr.framework.starter.common.toolkit.BeanUtil;
 import top.xblog1.emr.framework.starter.convention.exception.ClientException;
 import top.xblog1.emr.services.gateway.config.UserServicesPermissionConfig;
 import top.xblog1.emr.services.gateway.toolkit.JWTUtil;
@@ -65,12 +66,16 @@ public class UserServicesPermissionsVerifyFilter extends AbstractGatewayFilterFa
             //解析token
             UserInfoDTO userInfo = JWTUtil.parseJwtToken(token);
             ServerHttpRequest.Builder builder;
+            //用于传入权限校验的userInfo
+            UserInfoDTO permissionsVerifyUserInfo = new UserInfoDTO();
             //如果token不存在
             if (!validateToken(userInfo)) {
                 //构建一个ServerHttpRequest 其中userType写为访客
                 builder = exchange.getRequest().mutate().headers(httpHeaders -> {
                     httpHeaders.set(UserConstant.USER_TYPE_KEY, UserTypeEnum.GUEST.code());
                 });
+                //这里写为访客是为了后边的权限校验校验
+                permissionsVerifyUserInfo.setUserType(UserTypeEnum.GUEST.code());
             }else {
                 //将由token解析得到的数据存入请求header中
                 builder = exchange.getRequest().mutate().headers(httpHeaders -> {
@@ -80,10 +85,11 @@ public class UserServicesPermissionsVerifyFilter extends AbstractGatewayFilterFa
                     httpHeaders.set(UserConstant.USER_TYPE_KEY, userInfo.getUserType());
                     httpHeaders.set(UserConstant.USER_TOKEN_KEY, token);
                 });
+                BeanUtil.convert(userInfo, permissionsVerifyUserInfo);
             }
             ServerWebExchange serverWebExchange = exchange.mutate().request(builder.build()).build();
             // 做权限校验
-            if (!permissionsVerify(userInfo,request)) {
+            if (!permissionsVerify(permissionsVerifyUserInfo,request)) {
                 ServerHttpResponse response = exchange.getResponse();
                 response.setStatusCode(HttpStatus.FORBIDDEN);
                 return response.setComplete();
@@ -139,8 +145,8 @@ public class UserServicesPermissionsVerifyFilter extends AbstractGatewayFilterFa
 
                     break;
                 }
-                endIndex=i;
             }
+            endIndex=i;
         }
         return slashCount < 5 ? UserTypeEnum.GUEST.code() : path.substring(beginIndex, endIndex + 1);
     }
