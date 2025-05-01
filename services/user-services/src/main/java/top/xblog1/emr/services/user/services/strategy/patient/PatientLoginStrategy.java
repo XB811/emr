@@ -116,7 +116,9 @@ public class PatientLoginStrategy extends AbstractUserExecuteStrategy {
                 throw new ServiceException(HAS_USERNAME_NOTNULL);
             }
             //写入布隆过滤器和复用表
-            patientPhoneReuseMapper.delete(Wrappers.update(new PatientPhoneReuseDO(phone)));
+            patientPhoneReuseMapper.delete(Wrappers.update(PatientPhoneReuseDO.builder()
+                                        .phone(phone)
+                                        .build()));
             instance.opsForSet().remove(PATIENT_REGISTER_PHONE_REUSE_SHARDING + hashShardingIdx(phone), phone);
             patientRegisterUsernameCachePenetrationBloomFilter.add(requestParam.getUsername());
             patientRegisterPhoneCachePenetrationBloomFilter.add(requestParam.getPhone());
@@ -154,7 +156,9 @@ public class PatientLoginStrategy extends AbstractUserExecuteStrategy {
             patientMapper.deleteById(patientDO.getId());
             //手机号复用
             String phone =patientDO.getPhone();
-            patientPhoneReuseMapper.insert(new PatientPhoneReuseDO(phone));
+            patientPhoneReuseMapper.insert(PatientPhoneReuseDO.builder()
+                    .phone(phone)
+                    .build());
             StringRedisTemplate instance = (StringRedisTemplate) distributedCache.getInstance();
             instance.opsForSet().add(PATIENT_REGISTER_PHONE_REUSE_SHARDING+hashShardingIdx(phone), phone);
             // 删除登录token

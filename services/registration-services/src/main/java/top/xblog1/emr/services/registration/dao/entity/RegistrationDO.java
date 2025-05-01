@@ -27,4 +27,10 @@ public class RegistrationDO extends BaseDO {
     private Date appointmentDate;
     private Integer isFinish;
     private Integer appointmentTime;
+    /**
+     * 删除标志
+     */
+    @TableField(fill = FieldFill.INSERT)
+    @TableLogic(value = "0", delval = "1")
+    private Long delFlag;
 }

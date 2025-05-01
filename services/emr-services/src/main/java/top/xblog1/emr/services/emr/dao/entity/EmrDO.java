@@ -1,5 +1,8 @@
 package top.xblog1.emr.services.emr.dao.entity;
 
+import com.baomidou.mybatisplus.annotation.FieldFill;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -58,6 +61,8 @@ public class EmrDO extends BaseDO {
      */
     private String doctorAdvice;
 
-
+    @TableField(fill = FieldFill.INSERT)
+    @TableLogic(value = "0", delval = "1")
+    private Long delFlag;
 
 }

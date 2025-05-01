@@ -86,10 +86,14 @@ public class PatientInfoStrategy extends AbstractUserExecuteStrategy {
                         throw new ClientException(HAS_PHONE);
                 }
                 //旧号码加入复用表
-                patientPhoneReuseMapper.insert(new PatientPhoneReuseDO(oldPhone));
+                patientPhoneReuseMapper.insert(PatientPhoneReuseDO.builder()
+                                            .phone(oldPhone)
+                                            .build());
                 instance.opsForSet().add(PATIENT_REGISTER_PHONE_REUSE_SHARDING + hashShardingIdx(oldPhone), oldPhone);
                 //新号码加入布隆过滤器，从复用表删除
-                patientPhoneReuseMapper.delete(Wrappers.update(new PatientPhoneReuseDO(newPhone)));
+                patientPhoneReuseMapper.delete(Wrappers.update(PatientPhoneReuseDO.builder()
+                                                            .phone(newPhone)
+                                                            .build()));
                 instance.opsForSet().remove(PATIENT_REGISTER_PHONE_REUSE_SHARDING + hashShardingIdx(newPhone), newPhone);
                 patientRegisterPhoneCachePenetrationBloomFilter.add(newPhone);
 
