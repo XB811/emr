@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 import top.xblog1.emr.framework.starter.base.constant.UserConstant;
+import top.xblog1.emr.framework.starter.cache.DistributedCache;
 import top.xblog1.emr.framework.starter.common.enums.UserTypeEnum;
 import top.xblog1.emr.framework.starter.common.toolkit.BeanUtil;
 import top.xblog1.emr.framework.starter.convention.exception.ClientException;
@@ -37,6 +38,8 @@ public class UserServicesPermissionsVerifyFilter extends AbstractGatewayFilterFa
 
     @Autowired
     private  UserServicesPermissionConfig permissionConfig;
+    @Autowired
+    private DistributedCache distributedCache;
 
 
     public UserServicesPermissionsVerifyFilter() {
@@ -64,7 +67,9 @@ public class UserServicesPermissionsVerifyFilter extends AbstractGatewayFilterFa
             // TODO 需要验证 Token 是否有效，有可能用户注销了账户，但是 Token 有效期还未过
 
             //解析token
-            UserInfoDTO userInfo = JWTUtil.parseJwtToken(token);
+//            UserInfoDTO userInfo = JWTUtil.parseJwtToken(token);
+            // 修改为从缓存中获取token，方便后续将 JWTUtil 更换为其他的 token 生成方式
+            UserInfoDTO userInfo = distributedCache.get(token, UserInfoDTO.class);
             ServerHttpRequest.Builder builder;
             //用于传入权限校验的userInfo
             UserInfoDTO permissionsVerifyUserInfo = new UserInfoDTO();
