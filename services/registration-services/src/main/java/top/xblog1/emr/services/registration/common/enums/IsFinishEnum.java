@@ -7,12 +7,12 @@ package top.xblog1.emr.services.registration.common.enums;
 public enum IsFinishEnum {
 
     /**
-     * 正常状态
+     * 未完成状态
      */
     NOT_FINISH(0),
 
     /**
-     * 删除状态
+     * 一级完成状态
      */
     FINISHED(1);
 

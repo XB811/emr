@@ -13,6 +13,7 @@ public enum RegistrationErrorCodeEnum implements IErrorCode {
     DOCTOR_ID_NOTNULL("A005002","医生ID不能为空"),
     ID_NOTNULL("A005003","预约时间ID不能为空"),
     BOOKING_NOT_FOUNd("B005004","预约时间未找到"),
+    PATIENT_HAVE_NOT_FINISH_REGISTERED("B005005","当前患者存在未完成的挂号，挂号失败"),
     ;
 
     /**

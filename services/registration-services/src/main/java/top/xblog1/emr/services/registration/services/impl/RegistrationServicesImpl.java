@@ -26,8 +26,7 @@ import top.xblog1.emr.services.registration.services.RegistrationServices;
 
 import static top.xblog1.emr.services.registration.common.enums.IsFinishEnum.FINISHED;
 import static top.xblog1.emr.services.registration.common.enums.IsFinishEnum.NOT_FINISH;
-import static top.xblog1.emr.services.registration.common.enums.RegistrationErrorCodeEnum.ID_NOTNULL;
-import static top.xblog1.emr.services.registration.common.enums.RegistrationErrorCodeEnum.REMOTE_CALL_FAIL;
+import static top.xblog1.emr.services.registration.common.enums.RegistrationErrorCodeEnum.*;
 
 /**
  *
@@ -52,6 +51,14 @@ public class RegistrationServicesImpl implements RegistrationServices {
             throw new ClientException("预约时间不能为空");
         else if(requestParam.getAppointmentDate().before(new DateTime()))
             throw new ClientException("预约时间错误");
+        // 创建挂号应当先判断当前患者是否有未完成的挂号
+        LambdaQueryWrapper<RegistrationDO> queryWrapper = Wrappers.lambdaQuery(RegistrationDO.class)
+                .eq(RegistrationDO::getPatientId, requestParam.getPatientId())
+                .eq(RegistrationDO::getIsFinish, NOT_FINISH.code());
+        //如果当前患者存在未完成的预约
+        if (registrationMapper.selectCount(queryWrapper)>0) {
+            throw new ClientException(PATIENT_HAVE_NOT_FINISH_REGISTERED);
+        }
         RegistrationDO registrationDO = BeanUtil.convert(requestParam, RegistrationDO.class);
 
         //远程调用获取该医生的预约时间管理
