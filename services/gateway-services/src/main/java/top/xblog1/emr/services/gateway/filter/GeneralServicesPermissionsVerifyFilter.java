@@ -1,9 +1,11 @@
 package top.xblog1.emr.services.gateway.filter;
 
+import com.alibaba.fastjson2.JSON;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
@@ -32,6 +34,8 @@ public class GeneralServicesPermissionsVerifyFilter extends AbstractGatewayFilte
 
     @Autowired
     private DistributedCache distributedCache;
+    @Autowired
+    private StringRedisTemplate redisTemplate;
 
     public GeneralServicesPermissionsVerifyFilter() {
         super(Config.class);
@@ -60,7 +64,16 @@ public class GeneralServicesPermissionsVerifyFilter extends AbstractGatewayFilte
             //解析token
 //            UserInfoDTO userInfo = JWTUtil.parseJwtToken(token);
             // 修改为从缓存中获取token，方便后续将 JWTUtil 更换为其他的 token 生成方式
-            UserInfoDTO userInfo = distributedCache.get(token, UserInfoDTO.class);
+            UserInfoDTO userInfo1= null;
+            //StringRedisTemplate instance = (StringRedisTemplate) distributedCache.getInstance();
+            if (token != null && !token.isEmpty()){
+                // userInfo1 =distributedCache.get(token, UserInfoDTO.class);
+//                log.info("userInfoDTO:{}", userInfo1);
+                String s = redisTemplate.opsForValue().get(token);
+                userInfo1=JSON.parseObject(s, UserInfoDTO.class);
+            }
+
+            UserInfoDTO userInfo = userInfo1;
             // 因为后续需要做权限校验，故不做token的校验
             ServerHttpRequest.Builder builder;
             //如果token不存在

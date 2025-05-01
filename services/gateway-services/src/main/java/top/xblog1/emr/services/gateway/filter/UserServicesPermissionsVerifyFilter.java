@@ -1,11 +1,13 @@
 package top.xblog1.emr.services.gateway.filter;
 
+import com.alibaba.fastjson2.JSON;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
 import org.springframework.core.io.buffer.DataBufferUtils;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
@@ -40,6 +42,8 @@ public class UserServicesPermissionsVerifyFilter extends AbstractGatewayFilterFa
     private  UserServicesPermissionConfig permissionConfig;
     @Autowired
     private DistributedCache distributedCache;
+    @Autowired
+    private StringRedisTemplate redisTemplate;
 
 
     public UserServicesPermissionsVerifyFilter() {
@@ -69,7 +73,17 @@ public class UserServicesPermissionsVerifyFilter extends AbstractGatewayFilterFa
             //解析token
 //            UserInfoDTO userInfo = JWTUtil.parseJwtToken(token);
             // 修改为从缓存中获取token，方便后续将 JWTUtil 更换为其他的 token 生成方式
-            UserInfoDTO userInfo = distributedCache.get(token, UserInfoDTO.class);
+            //查询缓存的前提为token不为空
+            UserInfoDTO userInfo1= null;
+            //StringRedisTemplate instance = (StringRedisTemplate) distributedCache.getInstance();
+            if (token != null && !token.isEmpty()){
+//                userInfo1 =distributedCache.get(token, UserInfoDTO.class);
+//                log.info("userInfoDTO:{}", userInfo1);
+                String s = redisTemplate.opsForValue().get(token);
+                userInfo1=JSON.parseObject(s, UserInfoDTO.class);
+            }
+
+            UserInfoDTO userInfo = userInfo1;
             ServerHttpRequest.Builder builder;
             //用于传入权限校验的userInfo
             UserInfoDTO permissionsVerifyUserInfo = new UserInfoDTO();
