@@ -14,13 +14,14 @@ public class UserUpdateReqDTO {
     /**
     *  用户名 不可更新
     */
-    private String username;
+    // private String username;
     /**
-     * 密码
+     * 密码 这个密码更新不需要校验旧密码，
+     * 应当只对操作用户为 admin的账户开启权限
      */
     private String password;
     /**
-     * 用户类型
+     * 用户类型 这个数据不能更新，但是必须要上传
      */
     private String userType;
     /**

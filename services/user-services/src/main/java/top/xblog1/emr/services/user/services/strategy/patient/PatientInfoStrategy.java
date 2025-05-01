@@ -77,7 +77,13 @@ public class PatientInfoStrategy extends AbstractUserExecuteStrategy {
                 String newPhone = requestParam.getPhone();
                 //查询新号码是否可用
                 if (patientRegisterPhoneCachePenetrationBloomFilter.contains(newPhone)) {
-                    throw new ClientException(HAS_PHONE);
+                    // 查询复用表中有没有新手机号
+                    Boolean member = instance.opsForSet()
+                            .isMember(PATIENT_REGISTER_PHONE_REUSE_SHARDING
+                                    + hashShardingIdx(newPhone), newPhone);
+                    //如果布隆过滤器中有新手机号，且服用表中没有改=新手机号
+                    if(Boolean.FALSE.equals(member))
+                        throw new ClientException(HAS_PHONE);
                 }
                 //旧号码加入复用表
                 patientPhoneReuseMapper.insert(new PatientPhoneReuseDO(oldPhone));
@@ -90,10 +96,13 @@ public class PatientInfoStrategy extends AbstractUserExecuteStrategy {
             }
         }
         PatientDO patientDO = BeanUtil.convert(requestParam, PatientDO.class);
-        if(requestParam.getPassword()!=null&&!requestParam.getPassword().isEmpty()) {
-            //密码加密
-            patientDO.setPassword(PasswordEncryptUtil.encryptPassword(requestParam.getPassword()));
-        }
+        //不需要密码就可以更新密码 只给admin该权限
+        // 判断当前登录用户是不是admin
+        if(UserContext.getUserType().equals(UserTypeEnum.ADMIN.code()))
+            if(requestParam.getPassword()!=null&&!requestParam.getPassword().isEmpty()) {
+                //密码加密
+                patientDO.setPassword(PasswordEncryptUtil.encryptPassword(requestParam.getPassword()));
+            }
         LambdaUpdateWrapper<PatientDO> patientUpdateWrapper = Wrappers.lambdaUpdate(PatientDO.class)
                 .eq(PatientDO::getId, patientDO.getId());
         patientMapper.update(patientDO, patientUpdateWrapper);

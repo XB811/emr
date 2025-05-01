@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RLock;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.transaction.annotation.Transactional;
 import top.xblog1.emr.framework.starter.cache.DistributedCache;
 import org.springframework.stereotype.Component;
 import top.xblog1.emr.framework.starter.common.enums.UserTypeEnum;
@@ -61,15 +62,16 @@ public class AdminInfoStrategy extends AbstractUserExecuteStrategy {
                 .filter(method -> method.getParameterCount() == 1 && method.getParameterTypes()[0] == BaseUserDTO.class)
                 .forEach(method -> methodCache.put(method.getName(), method));
     }
+    @Transactional(rollbackFor = Exception.class)
     public void update(BaseUserDTO baseUserDTO) {
         //拆包
         UserUpdateReqDTO requestParam = baseUserDTO.getUserUpdateReqDTO();
         StringRedisTemplate instance = (StringRedisTemplate) distributedCache.getInstance();
         //查询用户
         baseUserDTO.setId(Long.valueOf(requestParam.getId()));
-        String phone = queryActualUserByID(baseUserDTO)
-                .getUserQueryActualRespDTO()
-                .getPhone();
+        UserQueryActualRespDTO userQueryActualRespDTO = queryActualUserByID(baseUserDTO)
+                .getUserQueryActualRespDTO();
+        String phone = userQueryActualRespDTO.getPhone();
         //更新redis中的手机号
         if(requestParam.getPhone()!=null&&!Objects.equals(phone, requestParam.getPhone())){
             instance.opsForSet().remove(USER_REGISTER_PHONE_ADMIN, phone);
@@ -80,7 +82,13 @@ public class AdminInfoStrategy extends AbstractUserExecuteStrategy {
         }
         AdminDO adminDO = BeanUtil.convert(requestParam, AdminDO.class);
         //密码加密
-        adminDO.setPassword(PasswordEncryptUtil.encryptPassword(requestParam.getPassword()));
+        //如果新密码不为空且新密码不为 “”
+        //如果当前登录用户是admin用户，可以更新密码
+        if(Objects.equals(UserContext.getUserType(), UserTypeEnum.ADMIN.code()))
+            //如果被更改用户不为root
+            if(!Objects.equals(userQueryActualRespDTO.getUsername(), UserTypeEnum.ROOT.code()))
+                if(!Objects.equals(requestParam.getPassword(), "")&&requestParam.getPassword() !=null)
+                    adminDO.setPassword(PasswordEncryptUtil.encryptPassword(requestParam.getPassword()));
         LambdaUpdateWrapper<AdminDO> adminUpdateWrapper = Wrappers.lambdaUpdate(AdminDO.class)
                 .eq(AdminDO::getId, adminDO.getId());
         adminMapper.update(adminDO, adminUpdateWrapper);

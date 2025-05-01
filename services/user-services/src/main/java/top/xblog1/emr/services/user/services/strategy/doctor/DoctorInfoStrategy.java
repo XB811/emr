@@ -7,6 +7,7 @@ import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import top.xblog1.emr.framework.starter.cache.DistributedCache;
 import top.xblog1.emr.framework.starter.common.enums.UserTypeEnum;
 import top.xblog1.emr.framework.starter.common.toolkit.BeanUtil;
@@ -55,15 +56,16 @@ public class DoctorInfoStrategy extends AbstractUserExecuteStrategy {
     /*
     更新用户信息
      */
+    @Transactional(rollbackFor = Exception.class)
     public void update(BaseUserDTO baseUserDTO) {
         //拆包
         UserUpdateReqDTO requestParam = baseUserDTO.getUserUpdateReqDTO();
         StringRedisTemplate instance = (StringRedisTemplate) distributedCache.getInstance();
         //查询用户
         baseUserDTO.setId(Long.valueOf(requestParam.getId()));
-        String phone = queryActualUserByID(baseUserDTO)
-                .getUserQueryActualRespDTO()
-                .getPhone();
+        UserQueryActualRespDTO userQueryActualRespDTO = queryActualUserByID(baseUserDTO)
+                .getUserQueryActualRespDTO();
+        String phone = userQueryActualRespDTO.getPhone();
         //更新redis中的手机号
         if(requestParam.getPhone()!=null&&!Objects.equals(phone, requestParam.getPhone())){
             instance.opsForSet().remove(USER_REGISTER_PHONE_DOCTOR, phone);
@@ -74,7 +76,10 @@ public class DoctorInfoStrategy extends AbstractUserExecuteStrategy {
         }
         DoctorDO doctorDO = BeanUtil.convert(requestParam, DoctorDO.class);
         //密码加密
-        doctorDO.setPassword(PasswordEncryptUtil.encryptPassword(requestParam.getPassword()));
+        // 这里只有admin可以更改密码
+        if(UserContext.getUserType().equals(UserTypeEnum.ADMIN.code()))
+            if(!Objects.equals(requestParam.getPassword(), "")&&requestParam.getPassword() !=null)
+                doctorDO.setPassword(PasswordEncryptUtil.encryptPassword(requestParam.getPassword()));
         LambdaUpdateWrapper<DoctorDO> adminUpdateWrapper = Wrappers.lambdaUpdate(DoctorDO.class)
                 .eq(DoctorDO::getId, doctorDO.getId());
         doctorMapper.update(doctorDO, adminUpdateWrapper);
