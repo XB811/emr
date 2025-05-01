@@ -11,6 +11,7 @@ import lombok.experimental.Accessors;
 @Getter
 @Accessors(fluent = true)
 public enum UserTypeEnum {
+    ROOT("root","超级管理员"),
     ADMIN("admin", "管理员"),
     DOCTOR("doctor", "医生"),
     PATIENT("patient", "患者"),
