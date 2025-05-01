@@ -29,6 +29,9 @@ import top.xblog1.emr.services.user.services.UserService;
 public class UserInfoController {
     private final UserService userService;
     private final UserLoginService userLoginService;
+    // TODO 所有接口 dto/req 添加注解参数校验
+    // TODO 数据库phone字段和idCard字段加密
+    // TODO 给 dao/entity 添加注解，控制更新或插入策略
 
     /**
     * 根据用户id和用户类型查询用户信息
