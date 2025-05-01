@@ -1,13 +1,17 @@
 package top.xblog1.emr.services.user.services.impl;
 
 import cn.hutool.core.util.StrUtil;
+import com.alibaba.fastjson2.JSON;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import top.xblog1.emr.framework.starter.cache.DistributedCache;
+import top.xblog1.emr.framework.starter.common.toolkit.BeanUtil;
 import top.xblog1.emr.framework.starter.convention.exception.ClientException;
 import top.xblog1.emr.framework.starter.designpattern.strategy.AbstractStrategyChoose;
 import top.xblog1.emr.framework.starter.user.core.UserContext;
+import top.xblog1.emr.framework.starter.user.core.UserInfoDTO;
 import top.xblog1.emr.framework.starter.user.toolkit.JWTUtil;
 import top.xblog1.emr.services.user.common.enums.UserOperationTypeEnum;
 import top.xblog1.emr.services.user.dto.req.UserDeletionReqDTO;
@@ -33,6 +37,7 @@ import static top.xblog1.emr.services.user.common.enums.UserOperationTypeEnum.US
 public class UserLoginServiceImpl implements UserLoginService {
     private final AbstractStrategyChoose strategyChoose;
     private final DistributedCache distributedCache;
+    private final StringRedisTemplate stringRedisTemplate;
     /**
     * 用户注册
     * @param requestParam
@@ -159,6 +164,8 @@ public class UserLoginServiceImpl implements UserLoginService {
 
     @Override
     public UserInfoQueryByTokenRespDTO getUserInfoByToken(String token) {
-        return distributedCache.get(token,UserInfoQueryByTokenRespDTO.class);
+        String s = stringRedisTemplate.opsForValue().get(token);
+        return JSON.parseObject(s,UserInfoQueryByTokenRespDTO.class);
+//        return BeanUtil.convert(distributedCache.get(token, UserInfoDTO.class), UserInfoQueryByTokenRespDTO.class);
     }
 }
