@@ -48,7 +48,7 @@ public class UserInfoController {
      * @param userType
     * @return Result<UserQueryActualRespDTO>
     */
-    @GetMapping("/v1/actual/query/{userType}/{id}")
+    @GetMapping("/v1/actualQuery/{userType}/{id}")
     public Result<UserQueryActualRespDTO> queryActualUserByIDAndUserType(@PathVariable @NotEmpty Long id,
                                                                          @PathVariable @NotEmpty String userType){
         return Results.success(userService.queryActualUserByIDAndUserType(id,userType));
