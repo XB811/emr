@@ -6,7 +6,9 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.aspectj.weaver.ast.Not;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import top.xblog1.emr.framework.starter.common.enums.UserTypeEnum;
 import top.xblog1.emr.framework.starter.common.toolkit.BeanUtil;
@@ -31,6 +33,7 @@ import static top.xblog1.emr.services.booking.common.enums.BookingErrorCodeEnum.
  */
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class BookingServicesImpl implements BookingServices {
     private final BookingMapper bookingMapper;
     private final UserServicesClient userServicesClient;
@@ -45,7 +48,11 @@ public class BookingServicesImpl implements BookingServices {
                                 requestParam.getDoctorId(),
                                 UserTypeEnum.DOCTOR.code()));
         bookingDO.setDoctorName(doctorInfo.getRealName());
-        bookingMapper.insert(bookingDO);
+        try {
+            bookingMapper.insert(bookingDO);
+        } catch (DuplicateKeyException e) {
+            throw new ClientException("该医生id已经创建预约");
+        }
         return BeanUtil.convert(bookingDO, BookingCreateRespDTO.class);
     }
 
@@ -72,6 +79,7 @@ public class BookingServicesImpl implements BookingServices {
                         UserTypeEnum.DOCTOR.code()));
         bookingDO.setDoctorName(doctorInfo.getRealName());
         bookingMapper.updateById(bookingDO);
+        log.info(bookingDO.toString());
         return BeanUtil.convert(bookingMapper.selectById(bookingDO.getId()), BookingUpdateRespDTO.class);
     }
 

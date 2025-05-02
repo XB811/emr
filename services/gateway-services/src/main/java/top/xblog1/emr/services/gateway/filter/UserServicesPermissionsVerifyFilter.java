@@ -26,10 +26,16 @@ import top.xblog1.emr.services.gateway.toolkit.UserInfoDTO;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
+
+import static top.xblog1.emr.services.gateway.common.constant.RedisKeyConstant.USER_LOGIN_TOKEN_PREFIX;
 
 /**
  *
@@ -81,6 +87,18 @@ public class UserServicesPermissionsVerifyFilter extends AbstractGatewayFilterFa
 //                log.info("userInfoDTO:{}", userInfo1);
                 String s = redisTemplate.opsForValue().get(token);
                 userInfo1=JSON.parseObject(s, UserInfoDTO.class);
+                //如果有token，但是token无效，手动返回异常
+                if(userInfo1 == null){
+                    ServerHttpResponse response = exchange.getResponse();
+                    // 创建包含错误信息的JSON响应
+                    Map<String, Object> responseBody = new HashMap<>();
+                    responseBody.put("code", "A100001");
+                    responseBody.put("message", "token无效或已过期");
+                    responseBody.put("data", null);
+                    // 将响应内容转换为字节并写入响应体
+                    byte[] bytes = JSON.toJSONString(responseBody).getBytes(StandardCharsets.UTF_8);
+                    return response.writeWith(Mono.just(response.bufferFactory().wrap(bytes)));
+                }
             }
 
             UserInfoDTO userInfo = userInfo1;
@@ -104,7 +122,11 @@ public class UserServicesPermissionsVerifyFilter extends AbstractGatewayFilterFa
                     httpHeaders.set(UserConstant.USER_TYPE_KEY, userInfo.getUserType());
                     httpHeaders.set(UserConstant.USER_TOKEN_KEY, token);
                 });
-                BeanUtil.convert(userInfo, permissionsVerifyUserInfo);
+                permissionsVerifyUserInfo=userInfo;
+                //token续期
+                redisTemplate.expire(token,30, TimeUnit.MINUTES);
+                redisTemplate.expire(USER_LOGIN_TOKEN_PREFIX+userInfo.getUserType()+":" +userInfo.getUserId(),30,TimeUnit.MINUTES);
+
             }
             ServerWebExchange serverWebExchange = exchange.mutate().request(builder.build()).build();
             // 做权限校验

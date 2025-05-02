@@ -9,10 +9,10 @@ import java.util.Date;
  */
 @Data
 public class EmrUpdateRespDTO {
-    private Long id;
-    private Long patientId;
-    private Long departmentId;
-    private Long doctorId;
+    private String id;
+    private String patientId;
+    private String departmentId;
+    private String doctorId;
 
 
     private String realName;

@@ -30,7 +30,7 @@ public class UserQueryActualRespDTO {
     /**
      * 部门
      */
-    private Long departmentId;
+    private String departmentId;
     /**
      * 职称
      */

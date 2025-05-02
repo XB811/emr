@@ -9,8 +9,8 @@ import java.util.Date;
  */
 @Data
 public class BookingQueryRespDTO {
-    private Long id;
-    private Long doctorId;
+    private String id;
+    private String doctorId;
     private String doctorName;
     private Long availableTime;
     private Boolean isAvailable;

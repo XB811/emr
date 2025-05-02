@@ -55,64 +55,64 @@ emr:
     path-permissions:
     #预约时间表
       # 创建预约时间
-      "/api/booking-services/v1/create": ["doctor","admin"]
+      "/api/booking-services/v1/create": ["root","doctor","admin"]
       #根据id删除预约时间表
-      "/api/booking-services/v1/delete": ["doctor","admin"]
+      "/api/booking-services/v1/delete": ["root","doctor","admin"]
       #更新预约时间表
-      "/api/booking-services/v1/update": ["doctor","admin"]
+      "/api/booking-services/v1/update": ["root","doctor","admin"]
       #根据id查询时间表
-      "/api/booking-services/v1/queryById": ["doctor","patient","admin"]
+      "/api/booking-services/v1/queryById": ["root","doctor","patient","admin"]
       #根据医生id查询时间表
-      "/api/booking-services/v1/queryByDoctorId": ["doctor","patient","admin"]
+      "/api/booking-services/v1/queryByDoctorId": ["root","doctor","patient","admin"]
     #科室管理
       #新增科室
-      "/api/department-services/v1/create": ["admin"]
+      "/api/department-services/v1/create": ["root","admin"]
       #删除科室
-      "/api/department-services/v1/delete": ["admin"]
+      "/api/department-services/v1/delete": ["root","admin"]
       #更新科室
-      "/api/department-services/v1/update": ["admin"]
+      "/api/department-services/v1/update": ["root","admin"]
       #根据id查询科室
-      "/api/department-services/v1/queryById": ["admin","doctor","patient"]
+      "/api/department-services/v1/queryById": ["root","admin","doctor","patient"]
       #查询所有科室
-      "/api/department-services/v1/queryAll": ["admin","doctor","patient","guest"]
+      "/api/department-services/v1/queryAll": ["root","admin","doctor","patient","guest"]
     #病历管理
       #新增病历
-      "/api/emr-services/v1/create": ["doctor"]
+      "/api/emr-services/v1/create": ["root","doctor"]
       #删掉病历
-      "/api/emr-services/v1/delete": ["doctor","patient"]
+      "/api/emr-services/v1/delete": ["root","doctor","patient"]
       #更新病历
-      "/api/emr-services/v1/update": ["doctor"]
+      "/api/emr-services/v1/update": ["root","doctor"]
       #id查询病历
-      "/api/emr-services/v1/queryById": ["doctor","admin","patient"]
+      "/api/emr-services/v1/queryById": ["root","doctor","admin","patient"]
     #就诊评价
       #新增评价
-      "/api/evaluation-services/v1/create": ["patient"]
+      "/api/evaluation-services/v1/create": ["root","patient"]
       #删除评价
-      "/api/evaluation-services/v1/delete": ["patient"]
+      "/api/evaluation-services/v1/delete": ["root","patient"]
       #id 查询
-      "/api/evaluation-services/v1/queryById": ["patient","admin","doctor"]
+      "/api/evaluation-services/v1/queryById": ["root","patient","admin","doctor"]
       # 病历id查询
-      "/api/evaluation-services/v1/queryByEmrId" : ["patient","admin","doctor"]
+      "/api/evaluation-services/v1/queryByEmrId" : ["root","patient","admin","doctor"]
     #公告管理
       #新增公告
-      "/api/notice-services/v1/create": ["admin"]
+      "/api/notice-services/v1/create": ["root","admin"]
       # 删除
-      "/api/notice-services/v1/delete": ["admin"]
+      "/api/notice-services/v1/delete": ["root","admin"]
       #改
-      "/api/notice-services/v1/update": ["admin"]
+      "/api/notice-services/v1/update": ["root","admin"]
       #查询
-      "/api/notice-services/v1/queryById": ["admin","doctor","patient","guest"]
+      "/api/notice-services/v1/queryById": ["root","admin","doctor","patient","guest"]
     #挂号管理
       #新增挂号
-      "/api/registration-services/v1/create": ["patient"]
+      "/api/registration-services/v1/create": ["root","patient"]
       #删除挂号
-      "/api/registration-services/v1/delete": ["patient"]
+      "/api/registration-services/v1/delete": ["root","patient"]
       #修改挂号
-      "/api/registration-services/v1/update": ["patient"]
+      "/api/registration-services/v1/update": ["root","patient"]
       #id 查询
-      "/api/registration-services/v1/queryById": ["admin","patient","doctor"]
+      "/api/registration-services/v1/queryById": ["root","admin","patient","doctor"]
       #完成挂号
-      "/api/registration-services/v1/finish": ["admin","patient","doctor"]
+      "/api/registration-services/v1/finish": ["root","admin","patient","doctor"]
 
     # 是否启用严格模式(未明确配置的路径将被拒绝)
     strict-mode: true
@@ -156,9 +156,9 @@ emr:
       # 登录权限只对guest开放
       # guest可以注册patient账户
       "guest":
-        "admin":   ["/api/user-services/v1/login"]
-        "doctor":  ["/api/user-services/v1/login"]
-        "patient": ["/api/user-services/v1/login","/api/user-services/v1/has-username","/api/user-services/v1/register"]
+        "admin":   ["/api/user-services/v1/login","/api/user-services/v1/check-login"]
+        "doctor":  ["/api/user-services/v1/login","/api/user-services/v1/check-login"]
+        "patient": ["/api/user-services/v1/login","/api/user-services/v1/has-username","/api/user-services/v1/register","/api/user-services/v1/check-login"]
         "guest": ["/api/user-services/v1/getUserInfoByToken"]
     # 是否启用严格模式(未明确配置的路径将被拒绝)
     strict-mode: true

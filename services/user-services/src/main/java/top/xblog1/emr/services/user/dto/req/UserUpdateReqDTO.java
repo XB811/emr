@@ -10,7 +10,7 @@ public class UserUpdateReqDTO {
     /**
      * 用户ID 不可更新
      */
-    private String id;
+    private Long id;
     /**
     *  用户名 不可更新
     */

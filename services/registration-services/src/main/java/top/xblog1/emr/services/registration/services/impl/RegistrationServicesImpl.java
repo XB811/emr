@@ -69,6 +69,9 @@ public class RegistrationServicesImpl implements RegistrationServices {
         String binaryString = Long.toBinaryString(bookingInfo.getAvailableTime());
         String availableTime = String.format("%14s", binaryString);
         int day = DateUtil.dayOfWeek(requestParam.getAppointmentDate());
+        //将时间由 日123456转为 123456日
+        day--;
+        if(day==0)day=7;
         int index=(day - 1) * 2 + requestParam.getAppointmentTime();
         char isAvailable = availableTime.charAt(index);
         if (isAvailable == '0') {
@@ -115,6 +118,9 @@ public class RegistrationServicesImpl implements RegistrationServices {
         String binaryString = Long.toBinaryString(bookingInfo.getAvailableTime());
         String availableTime = String.format("%014s", binaryString).replace(' ', '0');
         int day = DateUtil.dayOfWeek(requestParam.getAppointmentDate());
+        //将时间由 日123456转为 123456日
+        day--;
+        if(day==0)day=7;
         int index=(day - 1) * 2 + requestParam.getAppointmentTime();
         char isAvailable = availableTime.charAt(index);
         if (isAvailable == '0') {

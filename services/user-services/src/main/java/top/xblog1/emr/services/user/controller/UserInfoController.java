@@ -3,6 +3,7 @@ package top.xblog1.emr.services.user.controller;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import top.xblog1.emr.framework.starter.common.toolkit.BeanUtil;
 import top.xblog1.emr.framework.starter.convention.result.Result;
@@ -26,6 +27,7 @@ import top.xblog1.emr.services.user.services.UserService;
 @RestController
 @RequestMapping("/api/user-services")
 @RequiredArgsConstructor
+@Slf4j
 public class UserInfoController {
     private final UserService userService;
     private final UserLoginService userLoginService;
@@ -42,7 +44,9 @@ public class UserInfoController {
     @GetMapping("/v1/query/{userType}/{id}")
     public Result<UserQueryRespDTO> queryUserByIDAndUserType(@PathVariable @NotEmpty Long id,
                                                              @PathVariable @NotEmpty String userType){
-        return Results.success(userService.queryUserByIDAndUserType(id,userType));
+        UserQueryRespDTO userQueryRespDTO = userService.queryUserByIDAndUserType(id, userType);
+        //log.info(String.valueOf(userQueryRespDTO));
+        return Results.success(userQueryRespDTO);
     }
 
     /**

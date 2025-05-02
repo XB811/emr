@@ -20,7 +20,8 @@ public class MyMetaObjectHandler implements MetaObjectHandler {
     public void insertFill(MetaObject metaObject) {
         this.strictInsertFill(metaObject, "createTime", Date.class, new Date());
         this.strictInsertFill(metaObject, "updateTime", Date.class, new Date());
-        this.strictInsertFill(metaObject, "delFlag", Integer.class, DelEnum.NORMAL.code());
+        // this.setFieldValByName(metaObject, "delFlag", Integer.class, DelEnum.NORMAL.code());
+        this.setFieldValByName("delFlag", DelEnum.NORMAL.code().longValue(), metaObject);
     }
 
     /**

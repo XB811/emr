@@ -20,7 +20,11 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
+
 import top.xblog1.emr.services.gateway.config.GeneralServicesPermissionConfig;
+
+import static top.xblog1.emr.services.gateway.common.constant.RedisKeyConstant.USER_LOGIN_TOKEN_PREFIX;
 
 /**
  *
@@ -91,6 +95,9 @@ public class GeneralServicesPermissionsVerifyFilter extends AbstractGatewayFilte
                     httpHeaders.set(UserConstant.USER_TYPE_KEY, userInfo.getUserType());
                     httpHeaders.set(UserConstant.USER_TOKEN_KEY, token);
                 });
+                //token续期
+                redisTemplate.expire(token,30, TimeUnit.MINUTES);
+                redisTemplate.expire(USER_LOGIN_TOKEN_PREFIX+userInfo.getUserType()+":" +userInfo.getUserId(),30,TimeUnit.MINUTES);
             }
             ServerWebExchange serverWebExchange = exchange.mutate().request(builder.build()).build();
             // 做权限校验
@@ -119,11 +126,15 @@ public class GeneralServicesPermissionsVerifyFilter extends AbstractGatewayFilte
         }
         //获取请求uri
         String apiUrl = getApiUrl(serverWebExchange.getRequest().getPath().toString());
+        // 由于springboot匹配参数时会删除 / ，所以这里把 请求url的斜杠/也删除了
+        apiUrl =deleteSlashes(apiUrl);
 
         //log.info("apiUrl:{}", apiUrl);
         //权限校验并返回
         for(Map.Entry<String,List<String>> entry : pathPermissions.entrySet()){
+            //路径
             String pathPattern = entry.getKey();
+            //该路径可以通过的用户类型
             List<String> allowedTypes = entry.getValue();
             if(apiUrl.startsWith(pathPattern)){
                 return allowedTypes.contains(operatorUserType);
@@ -131,6 +142,9 @@ public class GeneralServicesPermissionsVerifyFilter extends AbstractGatewayFilte
         }
         // 没有找到匹配的路径规则，根据严格模式决定
         return !permissionConfig.isStrictMode();
+    }
+    private String deleteSlashes(String path){
+        return path.replace("/","");
     }
     /**
     * 获取接口路径

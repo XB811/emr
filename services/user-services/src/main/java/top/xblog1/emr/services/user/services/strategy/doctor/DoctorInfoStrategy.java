@@ -96,9 +96,10 @@ public class DoctorInfoStrategy extends AbstractUserExecuteStrategy {
         if (doctorDO == null) {
             throw new ClientException("用户ID不存在或已注销，请检查用户名是否正确");
         }
+        UserQueryActualRespDTO convert = BeanUtil.convert(doctorDO, UserQueryActualRespDTO.class);
         //封包返回
         return BaseUserDTO.builder()
-                .userQueryActualRespDTO(BeanUtil.convert(doctorDO, UserQueryActualRespDTO.class))
+                .userQueryActualRespDTO(convert)
                 .build();
     }
 

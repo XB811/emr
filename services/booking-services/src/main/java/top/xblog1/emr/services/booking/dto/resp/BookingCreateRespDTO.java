@@ -9,11 +9,11 @@ import java.util.Date;
  */
 @Data
 public class BookingCreateRespDTO {
-    Long id;
-    Long doctorId;
-    String doctorName;
-    Long availableTime;
-    Boolean isAvailable;
-    Date createTime;
-    Date updateTime;
+    private String id;
+    private String doctorId;
+    private String doctorName;
+    private Long availableTime;
+    private Boolean isAvailable;
+    private Date createTime;
+    private Date updateTime;
 }
