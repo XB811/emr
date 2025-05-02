@@ -9,8 +9,8 @@ import java.util.Date;
  */
 @Data
 public class NoticeUpdateRespDTO {
-    private Long id;
-    private Long adminId;
+    private String id;
+    private String adminId;
     private String adminName;
     private String title;
     private String content;

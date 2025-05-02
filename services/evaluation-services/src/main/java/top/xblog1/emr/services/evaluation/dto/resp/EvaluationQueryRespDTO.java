@@ -9,10 +9,10 @@ import java.util.Date;
  */
 @Data
 public class EvaluationQueryRespDTO {
-    private Long id;
-    private Long patientId;
-    private Long doctorId;
-    private Long emrId;
+    private String id;
+    private String patientId;
+    private String doctorId;
+    private String emrId;
     private String content;
     private Date createTime;
     private Date updateTime;

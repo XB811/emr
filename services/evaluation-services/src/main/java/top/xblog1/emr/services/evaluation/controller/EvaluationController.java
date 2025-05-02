@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import top.xblog1.emr.framework.starter.convention.result.Result;
 import top.xblog1.emr.framework.starter.web.Results;
 import top.xblog1.emr.services.evaluation.dto.req.EvaluationCreateReqDTO;
+import top.xblog1.emr.services.evaluation.dto.req.EvaluationUpdateReqDTO;
 import top.xblog1.emr.services.evaluation.dto.resp.EvaluationCreateRespDTO;
 import top.xblog1.emr.services.evaluation.dto.resp.EvaluationQueryRespDTO;
 import top.xblog1.emr.services.evaluation.services.EvaluationServices;
@@ -49,8 +50,19 @@ public class EvaluationController {
     public Result<EvaluationQueryRespDTO> queryById(@PathVariable @Valid Long id){
         return Results.success(evaluationServices.queryById(id));
     }
+    /**
+    * 根据emrid修改评价
+    * @param emrId 
+    * @return Result<EvaluationQueryRespDTO> 
+    */
     @GetMapping("/v1/queryByEmrId/{emrId}")
     public Result<EvaluationQueryRespDTO> queryByEmrId(@PathVariable @Valid Long emrId){
         return Results.success(evaluationServices.queryByEmrId(emrId));
+    }
+
+    @PutMapping("/v1/update")
+    public Result<Void> updateEmr(@RequestBody EvaluationUpdateReqDTO requestParam){
+        evaluationServices.update(requestParam);
+        return Results.success();
     }
 }

@@ -1,6 +1,7 @@
 package top.xblog1.emr.services.evaluation.services.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.beanutils.BeanUtils;
@@ -12,6 +13,7 @@ import top.xblog1.emr.framework.starter.convention.exception.ServiceException;
 import top.xblog1.emr.services.evaluation.dao.entity.EvaluationDO;
 import top.xblog1.emr.services.evaluation.dao.mapper.EvaluationMapper;
 import top.xblog1.emr.services.evaluation.dto.req.EvaluationCreateReqDTO;
+import top.xblog1.emr.services.evaluation.dto.req.EvaluationUpdateReqDTO;
 import top.xblog1.emr.services.evaluation.dto.resp.EvaluationCreateRespDTO;
 import top.xblog1.emr.services.evaluation.dto.resp.EvaluationQueryRespDTO;
 import top.xblog1.emr.services.evaluation.services.EvaluationServices;
@@ -69,5 +71,17 @@ public class EvaluationServicesImpl implements EvaluationServices {
         if(evaluationDO==null)
             throw new ClientException("评价不存在");
         return BeanUtil.convert(evaluationDO, EvaluationQueryRespDTO.class);
+    }
+
+    @Override
+    public void update(EvaluationUpdateReqDTO requestParam) {
+        LambdaUpdateWrapper<EvaluationDO> updateWrapper = Wrappers.lambdaUpdate(EvaluationDO.class)
+                .eq(EvaluationDO::getId,requestParam.getId());
+        try {
+            evaluationMapper.updateById(BeanUtil.convert(requestParam, EvaluationDO.class));
+        } catch (Exception e) {
+            throw new ServiceException("更新评价失败");
+        }
+
     }
 }
