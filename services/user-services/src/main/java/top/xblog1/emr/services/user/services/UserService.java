@@ -2,7 +2,9 @@ package top.xblog1.emr.services.user.services;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
+import top.xblog1.emr.framework.starter.convention.page.PageResponse;
 import top.xblog1.emr.services.user.dto.req.UpdatePasswordReqDTO;
+import top.xblog1.emr.services.user.dto.req.UserPageQueryReqDTO;
 import top.xblog1.emr.services.user.dto.req.UserUpdateReqDTO;
 import top.xblog1.emr.services.user.dto.resp.UserQueryActualRespDTO;
 import top.xblog1.emr.services.user.dto.resp.UserQueryRespDTO;
@@ -36,4 +38,6 @@ public interface UserService {
     UserQueryActualRespDTO queryActualUserByIDAndUserType(@NotEmpty Long id, @NotEmpty String userType);
 
     void updatePassword(UpdatePasswordReqDTO requestParam, @NotEmpty String userType);
+
+    PageResponse<UserQueryRespDTO> pageQuery(@Valid UserPageQueryReqDTO requestParam, @NotEmpty String userType);
 }

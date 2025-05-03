@@ -2,10 +2,12 @@ package top.xblog1.emr.services.user.services.strategy.admin;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.checkerframework.checker.units.qual.A;
 import org.redisson.api.RLock;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,6 +17,8 @@ import top.xblog1.emr.framework.starter.common.enums.UserTypeEnum;
 import top.xblog1.emr.framework.starter.common.toolkit.BeanUtil;
 import top.xblog1.emr.framework.starter.convention.exception.ClientException;
 import top.xblog1.emr.framework.starter.convention.exception.ServiceException;
+import top.xblog1.emr.framework.starter.convention.page.PageResponse;
+import top.xblog1.emr.framework.starter.database.toolkit.PageUtil;
 import top.xblog1.emr.framework.starter.designpattern.chain.AbstractChainContext;
 import top.xblog1.emr.framework.starter.user.core.UserContext;
 import top.xblog1.emr.services.user.common.constant.UserExecuteStrategyContant;
@@ -22,6 +26,7 @@ import top.xblog1.emr.services.user.common.enums.UserChainMarkEnum;
 import top.xblog1.emr.services.user.dao.entity.AdminDO;
 import top.xblog1.emr.services.user.dao.mapper.AdminMapper;
 import top.xblog1.emr.services.user.dto.req.UpdatePasswordReqDTO;
+import top.xblog1.emr.services.user.dto.req.UserPageQueryReqDTO;
 import top.xblog1.emr.services.user.dto.req.UserRegisterReqDTO;
 import top.xblog1.emr.services.user.dto.req.UserUpdateReqDTO;
 import top.xblog1.emr.services.user.dto.resp.UserQueryActualRespDTO;
@@ -32,6 +37,7 @@ import top.xblog1.emr.services.user.toolkit.PasswordEncryptUtil;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
 import static top.xblog1.emr.services.user.common.constant.RedisKeyConstant.*;
@@ -141,5 +147,27 @@ public class AdminInfoStrategy extends AbstractUserExecuteStrategy {
         }
         adminDO.setPassword(PasswordEncryptUtil.encryptPassword(requestParam.getNewPassword()));
         adminMapper.updateById(adminDO);
+    }
+    public BaseUserDTO pageQuery(BaseUserDTO request){
+        //拆包
+        UserPageQueryReqDTO requestParam = request.getUserPageQueryReqDTO();
+        //分页查询
+        LambdaQueryWrapper<AdminDO> queryWrapper = Wrappers.lambdaQuery(AdminDO.class);
+        if(requestParam.getPhone() !=null&& !requestParam.getPhone().isEmpty())
+            queryWrapper.eq(AdminDO::getPhone,requestParam.getPhone());
+        if(requestParam.getUsername()!=null&& !requestParam.getUsername().isEmpty())
+            queryWrapper.like(AdminDO::getUsername,requestParam.getUsername());
+        if(requestParam.getRealName()!=null&& !requestParam.getRealName().isEmpty())
+            queryWrapper.like(AdminDO::getRealName,requestParam.getRealName());
+        queryWrapper.orderByDesc(AdminDO::getUpdateTime);
+        IPage<AdminDO> adminDOIPage =adminMapper.selectPage(PageUtil.convert(requestParam), queryWrapper);
+        PageResponse<UserQueryRespDTO> response = PageUtil.convert(adminDOIPage, each -> {
+
+            return BeanUtil.convert(each, UserQueryRespDTO.class);
+        });
+        return BaseUserDTO.builder()
+                .userPageQueryRespDTO(response)
+                .build();
+
     }
 }

@@ -2,6 +2,7 @@ package top.xblog1.emr.services.user.services.strategy.patient;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
@@ -13,16 +14,19 @@ import top.xblog1.emr.framework.starter.cache.DistributedCache;
 import top.xblog1.emr.framework.starter.common.enums.UserTypeEnum;
 import top.xblog1.emr.framework.starter.common.toolkit.BeanUtil;
 import top.xblog1.emr.framework.starter.convention.exception.ClientException;
+import top.xblog1.emr.framework.starter.convention.page.PageResponse;
+import top.xblog1.emr.framework.starter.database.toolkit.PageUtil;
 import top.xblog1.emr.framework.starter.user.core.UserContext;
 import top.xblog1.emr.services.user.common.constant.UserExecuteStrategyContant;
-import top.xblog1.emr.services.user.dao.entity.AdminDO;
 import top.xblog1.emr.services.user.dao.entity.PatientDO;
 import top.xblog1.emr.services.user.dao.entity.PatientPhoneReuseDO;
 import top.xblog1.emr.services.user.dao.mapper.PatientMapper;
 import top.xblog1.emr.services.user.dao.mapper.PatientPhoneReuseMapper;
 import top.xblog1.emr.services.user.dto.req.UpdatePasswordReqDTO;
+import top.xblog1.emr.services.user.dto.req.UserPageQueryReqDTO;
 import top.xblog1.emr.services.user.dto.req.UserUpdateReqDTO;
 import top.xblog1.emr.services.user.dto.resp.UserQueryActualRespDTO;
+import top.xblog1.emr.services.user.dto.resp.UserQueryRespDTO;
 import top.xblog1.emr.services.user.dto.strategy.BaseUserDTO;
 import top.xblog1.emr.services.user.services.strategy.AbstractUserExecuteStrategy;
 import top.xblog1.emr.services.user.toolkit.PasswordEncryptUtil;
@@ -32,7 +36,6 @@ import java.util.Arrays;
 import java.util.Objects;
 
 import static top.xblog1.emr.services.user.common.constant.RedisKeyConstant.PATIENT_REGISTER_PHONE_REUSE_SHARDING;
-import static top.xblog1.emr.services.user.common.constant.RedisKeyConstant.USER_REGISTER_PHONE_ADMIN;
 import static top.xblog1.emr.services.user.common.enums.UserRegisterErrorCodeEnum.HAS_PHONE;
 import static top.xblog1.emr.services.user.toolkit.UserReuseUtil.hashShardingIdx;
 
@@ -155,5 +158,30 @@ public class PatientInfoStrategy extends AbstractUserExecuteStrategy {
         }
         patientDO.setPassword(PasswordEncryptUtil.encryptPassword(requestParam.getNewPassword()));
         patientMapper.updateById(patientDO);
+    }
+
+    public BaseUserDTO pageQuery(BaseUserDTO request){
+        //拆包
+        UserPageQueryReqDTO requestParam = request.getUserPageQueryReqDTO();
+        //分页查询
+        LambdaQueryWrapper<PatientDO> queryWrapper = Wrappers.lambdaQuery(PatientDO.class);
+        if(requestParam.getUsername()!=null&&!requestParam.getUsername().isEmpty())
+                queryWrapper.like(PatientDO::getUsername,requestParam.getUsername());
+        if(requestParam.getRealName()!=null&&!requestParam.getRealName().isEmpty())
+                queryWrapper.like(PatientDO::getRealName,requestParam.getRealName());
+        if(requestParam.getPhone()!=null&&!requestParam.getPhone().isEmpty())
+                queryWrapper.like(PatientDO::getPhone,requestParam.getPhone());
+        if(requestParam.getIdCard()!=null&&!requestParam.getIdCard().isEmpty())
+                queryWrapper.like(PatientDO::getIdCard,requestParam.getIdCard());
+        queryWrapper.orderByDesc(PatientDO::getUpdateTime);
+        IPage<PatientDO> patientDOIPage =patientMapper.selectPage(PageUtil.convert(requestParam), queryWrapper);
+        PageResponse<UserQueryRespDTO> response = PageUtil.convert(patientDOIPage, each -> {
+
+            return BeanUtil.convert(each, UserQueryRespDTO.class);
+        });
+        return BaseUserDTO.builder()
+                .userPageQueryRespDTO(response)
+                .build();
+
     }
 }

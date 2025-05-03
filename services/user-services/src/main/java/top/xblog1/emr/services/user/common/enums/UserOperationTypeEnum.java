@@ -22,6 +22,7 @@ public enum UserOperationTypeEnum {
     USER_QUERY_USER_BY_ID("queryUserByID","根据用户id查询用户信息"),
     USER_QUERY_ACTUAL_USER_BY_ID("queryActualUserByID","根据用户id查询用户无脱敏信息"),
     USER_PASSWORD_UPDATE("updatePassword","更新当前登录用户密码"),
+    USER_PAGE_QUERY("pageQuery","分页查询"),
     ;
     private final String code;
     private final String desc;

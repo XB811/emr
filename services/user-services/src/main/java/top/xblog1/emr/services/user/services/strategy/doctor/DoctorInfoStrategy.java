@@ -2,6 +2,7 @@ package top.xblog1.emr.services.user.services.strategy.doctor;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
@@ -12,14 +13,17 @@ import top.xblog1.emr.framework.starter.cache.DistributedCache;
 import top.xblog1.emr.framework.starter.common.enums.UserTypeEnum;
 import top.xblog1.emr.framework.starter.common.toolkit.BeanUtil;
 import top.xblog1.emr.framework.starter.convention.exception.ClientException;
+import top.xblog1.emr.framework.starter.convention.page.PageResponse;
+import top.xblog1.emr.framework.starter.database.toolkit.PageUtil;
 import top.xblog1.emr.framework.starter.user.core.UserContext;
 import top.xblog1.emr.services.user.common.constant.UserExecuteStrategyContant;
-import top.xblog1.emr.services.user.dao.entity.AdminDO;
 import top.xblog1.emr.services.user.dao.entity.DoctorDO;
 import top.xblog1.emr.services.user.dao.mapper.DoctorMapper;
 import top.xblog1.emr.services.user.dto.req.UpdatePasswordReqDTO;
+import top.xblog1.emr.services.user.dto.req.UserPageQueryReqDTO;
 import top.xblog1.emr.services.user.dto.req.UserUpdateReqDTO;
 import top.xblog1.emr.services.user.dto.resp.UserQueryActualRespDTO;
+import top.xblog1.emr.services.user.dto.resp.UserQueryRespDTO;
 import top.xblog1.emr.services.user.dto.strategy.BaseUserDTO;
 import top.xblog1.emr.services.user.services.strategy.AbstractUserExecuteStrategy;
 import top.xblog1.emr.services.user.toolkit.PasswordEncryptUtil;
@@ -28,7 +32,6 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Objects;
 
-import static top.xblog1.emr.services.user.common.constant.RedisKeyConstant.USER_REGISTER_PHONE_ADMIN;
 import static top.xblog1.emr.services.user.common.constant.RedisKeyConstant.USER_REGISTER_PHONE_DOCTOR;
 import static top.xblog1.emr.services.user.common.enums.UserRegisterErrorCodeEnum.HAS_PHONE;
 
@@ -80,9 +83,9 @@ public class DoctorInfoStrategy extends AbstractUserExecuteStrategy {
         if(UserContext.getUserType().equals(UserTypeEnum.ADMIN.code()))
             if(!Objects.equals(requestParam.getPassword(), "")&&requestParam.getPassword() !=null)
                 doctorDO.setPassword(PasswordEncryptUtil.encryptPassword(requestParam.getPassword()));
-        LambdaUpdateWrapper<DoctorDO> adminUpdateWrapper = Wrappers.lambdaUpdate(DoctorDO.class)
+        LambdaUpdateWrapper<DoctorDO> doctorUpdateWrapper = Wrappers.lambdaUpdate(DoctorDO.class)
                 .eq(DoctorDO::getId, doctorDO.getId());
-        doctorMapper.update(doctorDO, adminUpdateWrapper);
+        doctorMapper.update(doctorDO, doctorUpdateWrapper);
     }
     /*
     根据id查询用户未脱敏信息
@@ -132,5 +135,28 @@ public class DoctorInfoStrategy extends AbstractUserExecuteStrategy {
         }
         doctorDO.setPassword(PasswordEncryptUtil.encryptPassword(requestParam.getNewPassword()));
         doctorMapper.updateById(doctorDO);
+    }
+
+    public BaseUserDTO pageQuery(BaseUserDTO request){
+        //拆包
+        UserPageQueryReqDTO requestParam = request.getUserPageQueryReqDTO();
+        //分页查询
+        LambdaQueryWrapper<DoctorDO> queryWrapper = Wrappers.lambdaQuery(DoctorDO.class);
+        if(requestParam.getPhone() !=null&& !requestParam.getPhone().isEmpty())
+            queryWrapper.eq(DoctorDO::getPhone,requestParam.getPhone());
+        if(requestParam.getUsername()!=null&& !requestParam.getUsername().isEmpty())
+                queryWrapper.like(DoctorDO::getUsername,requestParam.getUsername());
+        if(requestParam.getRealName()!=null&& !requestParam.getRealName().isEmpty())
+                queryWrapper.like(DoctorDO::getRealName,requestParam.getRealName());
+        queryWrapper.orderByDesc(DoctorDO::getUpdateTime);
+        IPage<DoctorDO> doctorDOIPage =doctorMapper.selectPage(PageUtil.convert(requestParam), queryWrapper);
+        PageResponse<UserQueryRespDTO> response = PageUtil.convert(doctorDOIPage, each -> {
+
+            return BeanUtil.convert(each, UserQueryRespDTO.class);
+        });
+        return BaseUserDTO.builder()
+                .userPageQueryRespDTO(response)
+                .build();
+
     }
 }

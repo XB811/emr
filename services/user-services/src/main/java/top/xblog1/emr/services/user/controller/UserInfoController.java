@@ -6,14 +6,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import top.xblog1.emr.framework.starter.common.toolkit.BeanUtil;
+import top.xblog1.emr.framework.starter.convention.page.PageResponse;
 import top.xblog1.emr.framework.starter.convention.result.Result;
 import top.xblog1.emr.framework.starter.user.core.UserInfoDTO;
 import top.xblog1.emr.framework.starter.user.toolkit.JWTUtil;
 import top.xblog1.emr.framework.starter.web.Results;
-import top.xblog1.emr.services.user.dto.req.UpdatePasswordReqDTO;
-import top.xblog1.emr.services.user.dto.req.UserDeletionReqDTO;
-import top.xblog1.emr.services.user.dto.req.UserRegisterReqDTO;
-import top.xblog1.emr.services.user.dto.req.UserUpdateReqDTO;
+import top.xblog1.emr.services.user.dto.req.*;
 import top.xblog1.emr.services.user.dto.resp.UserInfoQueryByTokenRespDTO;
 import top.xblog1.emr.services.user.dto.resp.UserQueryActualRespDTO;
 import top.xblog1.emr.services.user.dto.resp.UserQueryRespDTO;
@@ -120,5 +118,18 @@ public class UserInfoController {
                                        @PathVariable @NotEmpty String userType) {
         userService.updatePassword(requestParam,userType);
         return Results.success();
+    }
+    
+    /**
+    * 分页查询
+    * @param requestParam 
+     * @param userType 
+    * @return Result<PageResponse<UserQueryRespDTO>> 
+    */
+    @GetMapping("/v1/page/{userType}")
+    public Result<PageResponse<UserQueryRespDTO>> pageQueryUser(@RequestBody @Valid UserPageQueryReqDTO requestParam,
+                                                                @PathVariable @NotEmpty String userType) {
+        return Results.success(userService.pageQuery(requestParam,userType));
+        
     }
 }
