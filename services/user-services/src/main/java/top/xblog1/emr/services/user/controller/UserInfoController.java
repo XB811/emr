@@ -111,7 +111,6 @@ public class UserInfoController {
     public Result<UserInfoQueryByTokenRespDTO> getUserInfoByToken(@RequestParam @NotEmpty String token) {
         return Results.success(userLoginService.getUserInfoByToken(token));
     }
-    // TODO 根据多种条件分页查询用户
 
     @PutMapping("/v1/updatePassword/{userType}")
     public Result<Void> updatePassword(@RequestBody @Valid UpdatePasswordReqDTO requestParam,

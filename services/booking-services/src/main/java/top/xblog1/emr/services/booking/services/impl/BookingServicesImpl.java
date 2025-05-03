@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,10 +15,13 @@ import top.xblog1.emr.framework.starter.common.enums.UserTypeEnum;
 import top.xblog1.emr.framework.starter.common.toolkit.BeanUtil;
 import top.xblog1.emr.framework.starter.convention.exception.ClientException;
 import top.xblog1.emr.framework.starter.convention.exception.ServiceException;
+import top.xblog1.emr.framework.starter.convention.page.PageResponse;
 import top.xblog1.emr.framework.starter.convention.result.Result;
+import top.xblog1.emr.framework.starter.database.toolkit.PageUtil;
 import top.xblog1.emr.services.booking.dao.entity.BookingDO;
 import top.xblog1.emr.services.booking.dao.mapper.BookingMapper;
 import top.xblog1.emr.services.booking.dto.req.BookingCreateReqDTO;
+import top.xblog1.emr.services.booking.dto.req.BookingPageQueryReqDTO;
 import top.xblog1.emr.services.booking.dto.req.BookingUpdateReqDTO;
 import top.xblog1.emr.services.booking.dto.resp.BookingCreateRespDTO;
 import top.xblog1.emr.services.booking.dto.resp.BookingQueryRespDTO;
@@ -100,6 +104,22 @@ public class BookingServicesImpl implements BookingServices {
         BookingDO bookingDO = bookingMapper.selectOne(queryWrapper);
         if(bookingDO==null)throw new ServiceException(BOOKING_NOT_FOUNd);
         return BeanUtil.convert(bookingDO, BookingQueryRespDTO.class);
+    }
+
+    @Override
+    public PageResponse<BookingQueryRespDTO> pageQuery(BookingPageQueryReqDTO requestParam) {
+        LambdaQueryWrapper<BookingDO> queryWrapper = Wrappers.lambdaQuery(BookingDO.class);
+        if(requestParam.getDoctorId()!=null)
+            queryWrapper.like(BookingDO::getDoctorId,requestParam.getDoctorId());
+        if(requestParam.getDoctorName()!=null&& !requestParam.getDoctorName().isEmpty())
+            queryWrapper.like(BookingDO::getDoctorName,requestParam.getDoctorName());
+        queryWrapper.eq(BookingDO::getIsAvailable,requestParam.getIsAvailable());
+        queryWrapper.orderByDesc(BookingDO::getUpdateTime);
+        IPage<BookingDO> bookingDOIPageDO = bookingMapper.selectPage(PageUtil.convert(requestParam),queryWrapper);
+        return PageUtil.convert(bookingDOIPageDO, each -> {
+
+            return BeanUtil.convert(each, BookingQueryRespDTO.class);
+        });
     }
 
     private <T> T remoteCallsResultHandle(Result<T> result){

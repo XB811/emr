@@ -3,9 +3,11 @@ package top.xblog1.emr.services.booking.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import top.xblog1.emr.framework.starter.convention.page.PageResponse;
 import top.xblog1.emr.framework.starter.convention.result.Result;
 import top.xblog1.emr.framework.starter.web.Results;
 import top.xblog1.emr.services.booking.dto.req.BookingCreateReqDTO;
+import top.xblog1.emr.services.booking.dto.req.BookingPageQueryReqDTO;
 import top.xblog1.emr.services.booking.dto.req.BookingUpdateReqDTO;
 import top.xblog1.emr.services.booking.dto.resp.BookingCreateRespDTO;
 import top.xblog1.emr.services.booking.dto.resp.BookingQueryRespDTO;
@@ -69,5 +71,14 @@ public class BookingController {
     public Result<BookingQueryRespDTO> queryByDoctorId(@PathVariable @Valid Long doctorId){
         return Results.success(bookingServices.queryByDoctorId(doctorId));
     }
-    //TODO 分页查询
+    //分页查询
+    /**
+    * 分页查询
+    * @param requestParam 
+    * @return Result<PageResponse<BookingQueryRespDTO>> 
+    */
+    @GetMapping("/v1/pageQuery")
+    public Result<PageResponse<BookingQueryRespDTO>> pageQuery(@RequestBody BookingPageQueryReqDTO requestParam){
+        return Results.success(bookingServices.pageQuery(requestParam));
+    }
 }

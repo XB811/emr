@@ -64,6 +64,7 @@ emr:
       "/api/booking-services/v1/queryById": ["root","doctor","patient","admin"]
       #根据医生id查询时间表
       "/api/booking-services/v1/queryByDoctorId": ["root","doctor","patient","admin"]
+      "/api/booking-services/v1/pageQuery": ["root","admin","doctor","patient"]
     #科室管理
       #新增科室
       "/api/department-services/v1/create": ["root","admin"]
