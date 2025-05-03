@@ -3,9 +3,11 @@ package top.xblog1.emr.services.department.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import top.xblog1.emr.framework.starter.convention.page.PageResponse;
 import top.xblog1.emr.framework.starter.convention.result.Result;
 import top.xblog1.emr.framework.starter.web.Results;
 import top.xblog1.emr.services.department.dto.req.DepartmentInsertReqDTO;
+import top.xblog1.emr.services.department.dto.req.DepartmentPageQueryReqDTO;
 import top.xblog1.emr.services.department.dto.req.DepartmentUpdateReqDTO;
 import top.xblog1.emr.services.department.dto.resp.DepartmentQueryRespDTO;
 import top.xblog1.emr.services.department.dto.resp.DepartmentUpdateRespDTO;
@@ -14,7 +16,7 @@ import top.xblog1.emr.services.department.services.DepartmentServices;
 import java.util.List;
 
 /**
- *
+ * 部门管理
  */
 @RestController
 @RequestMapping("/api/department-services")
@@ -71,5 +73,14 @@ public class DepartmentController {
     public Result<List<DepartmentQueryRespDTO>> queryAll(){
         return Results.success(departmentServices.queryAll());
     }
-    //TODO 分页查询
+    // 分页查询
+    /**
+    * 分页查询
+    * @param requestParam 
+    * @return Result<PageResponse<DepartmentQueryRespDTO>> 
+    */
+    @GetMapping("/v1/pageQuery")
+    public Result<PageResponse<DepartmentQueryRespDTO>> pageQuery(@RequestBody DepartmentPageQueryReqDTO requestParam){
+        return  Results.success(departmentServices.pageQuery(requestParam));
+    }
 }

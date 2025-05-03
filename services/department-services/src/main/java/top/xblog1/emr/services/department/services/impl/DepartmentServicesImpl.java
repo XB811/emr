@@ -1,8 +1,11 @@
 package top.xblog1.emr.services.department.services.impl;
 
 import cn.hutool.json.JSONUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.Mapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DuplicateKeyException;
@@ -13,11 +16,14 @@ import top.xblog1.emr.framework.starter.cache.DistributedCache;
 import top.xblog1.emr.framework.starter.common.toolkit.BeanUtil;
 import top.xblog1.emr.framework.starter.convention.exception.ClientException;
 import top.xblog1.emr.framework.starter.convention.exception.ServiceException;
+import top.xblog1.emr.framework.starter.convention.page.PageResponse;
+import top.xblog1.emr.framework.starter.database.toolkit.PageUtil;
 import top.xblog1.emr.framework.starter.designpattern.chain.AbstractChainContext;
 import top.xblog1.emr.services.department.common.enums.DepartmentChainMarkEnum;
 import top.xblog1.emr.services.department.dao.entity.DepartmentDO;
 import top.xblog1.emr.services.department.dao.mapper.DepartmentMapper;
 import top.xblog1.emr.services.department.dto.req.DepartmentInsertReqDTO;
+import top.xblog1.emr.services.department.dto.req.DepartmentPageQueryReqDTO;
 import top.xblog1.emr.services.department.dto.req.DepartmentUpdateReqDTO;
 import top.xblog1.emr.services.department.dto.resp.DepartmentQueryRespDTO;
 import top.xblog1.emr.services.department.dto.resp.DepartmentUpdateRespDTO;
@@ -149,5 +155,21 @@ public class DepartmentServicesImpl implements DepartmentServices {
             result.add(JSONUtil.toBean(s, DepartmentDO.class));
         });
         return BeanUtil.convert(result, DepartmentQueryRespDTO.class);
+    }
+
+    @Override
+    public PageResponse<DepartmentQueryRespDTO> pageQuery(DepartmentPageQueryReqDTO requestParam) {
+        LambdaQueryWrapper<DepartmentDO> departmentWrapper = Wrappers.lambdaQuery(DepartmentDO.class);
+        if(requestParam.getCode()!=null&& !requestParam.getCode().isEmpty())
+            departmentWrapper.like(DepartmentDO::getCode, requestParam.getCode());
+        if(requestParam.getName()!=null&& !requestParam.getName().isEmpty())
+            departmentWrapper.like(DepartmentDO::getName, requestParam.getName());
+        if(requestParam.getAddress()!=null&& !requestParam.getAddress().isEmpty())
+            departmentWrapper.like(DepartmentDO::getAddress, requestParam.getAddress());
+        departmentWrapper.orderByDesc(DepartmentDO::getUpdateTime);
+        IPage<DepartmentDO> departmentDOIpage = departmentMapper.selectPage(PageUtil.convert(requestParam), departmentWrapper);
+        return PageUtil.convert(departmentDOIpage , each ->{
+            return BeanUtil.convert(each, DepartmentQueryRespDTO.class);
+        });
     }
 }
