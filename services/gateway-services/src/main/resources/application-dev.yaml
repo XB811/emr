@@ -76,6 +76,7 @@ emr:
       "/api/department-services/v1/queryById": ["root","admin","doctor","patient"]
       #查询所有科室
       "/api/department-services/v1/queryAll": ["root","admin","doctor","patient","guest"]
+      "/api/department-services/v1/pageQuery": ["root","admin","doctor","patient"]
     #病历管理
       #新增病历
       "/api/emr-services/v1/create": ["root","doctor"]
@@ -85,6 +86,7 @@ emr:
       "/api/emr-services/v1/update": ["root","doctor"]
       #id查询病历
       "/api/emr-services/v1/queryById": ["root","doctor","admin","patient"]
+      "/api/emr-services/v1/pageQuery": ["root","doctor","admin","patient"]
     #就诊评价
       #新增评价
       "/api/evaluation-services/v1/create": ["root","patient"]
@@ -94,6 +96,7 @@ emr:
       "/api/evaluation-services/v1/queryById": ["root","patient","admin","doctor"]
       # 病历id查询
       "/api/evaluation-services/v1/queryByEmrId" : ["root","patient","admin","doctor"]
+      "/api/evaluation-services/v1/pageQuery": ["root","patient","admin","doctor"]
     #公告管理
       #新增公告
       "/api/notice-services/v1/create": ["root","admin"]
@@ -103,6 +106,7 @@ emr:
       "/api/notice-services/v1/update": ["root","admin"]
       #查询
       "/api/notice-services/v1/queryById": ["root","admin","doctor","patient","guest"]
+      "/api/notice-services/v1/pageQuery":["root","admin","doctor","patient"]
     #挂号管理
       #新增挂号
       "/api/registration-services/v1/create": ["root","patient"]
@@ -114,6 +118,7 @@ emr:
       "/api/registration-services/v1/queryById": ["root","admin","patient","doctor"]
       #完成挂号
       "/api/registration-services/v1/finish": ["root","admin","patient","doctor"]
+      "/api/registration-services/v1/pageQuery": ["root","admin","patient","doctor"]
 
     # 是否启用严格模式(未明确配置的路径将被拒绝)
     strict-mode: true

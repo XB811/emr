@@ -6,16 +6,20 @@ import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.mapper.Mapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import top.xblog1.emr.framework.starter.common.toolkit.BeanUtil;
 import top.xblog1.emr.framework.starter.convention.exception.ClientException;
 import top.xblog1.emr.framework.starter.convention.exception.ServiceException;
+import top.xblog1.emr.framework.starter.convention.page.PageResponse;
 import top.xblog1.emr.framework.starter.convention.result.Result;
+import top.xblog1.emr.framework.starter.database.toolkit.PageUtil;
 import top.xblog1.emr.services.registration.dao.entity.RegistrationDO;
 import top.xblog1.emr.services.registration.dao.mapper.RegistrationMapper;
 import top.xblog1.emr.services.registration.dto.req.RegistrationCreateReqDTO;
+import top.xblog1.emr.services.registration.dto.req.RegistrationPageQueryReqDTO;
 import top.xblog1.emr.services.registration.dto.req.RegistrationUpdateReqDTO;
 import top.xblog1.emr.services.registration.dto.resp.RegistrationCreateRespDTO;
 import top.xblog1.emr.services.registration.dto.resp.RegistrationQueryRespDTO;
@@ -159,6 +163,28 @@ public class RegistrationServicesImpl implements RegistrationServices {
         }catch (Exception e) {
             throw new ServiceException("挂号完成失败");
         }
+    }
+
+    @Override
+    public PageResponse<RegistrationQueryRespDTO> pageQuery(RegistrationPageQueryReqDTO requestParam) {
+        LambdaQueryWrapper<RegistrationDO> queryWrapper = Wrappers.lambdaQuery(RegistrationDO.class);
+        if(requestParam.getPatientId() !=null)
+            queryWrapper.eq(RegistrationDO::getPatientId, requestParam.getPatientId());
+        if(requestParam.getDoctorId()!=null)
+            queryWrapper.eq(RegistrationDO::getDoctorId,requestParam.getDoctorId());
+        if(requestParam.getAppointmentDate()!=null)
+            queryWrapper.eq(RegistrationDO::getAppointmentDate,requestParam.getAppointmentDate());
+        if(requestParam.getIsFinish()!=null)
+            queryWrapper.eq(RegistrationDO::getIsFinish,requestParam.getIsFinish());
+        if(requestParam.getAppointmentTime()!=null)
+            queryWrapper.eq(RegistrationDO::getAppointmentTime,requestParam.getAppointmentTime());
+        queryWrapper.orderByDesc(RegistrationDO::getUpdateTime);
+        IPage<RegistrationDO> registrationDOIPage =registrationMapper.selectPage(PageUtil.convert(requestParam), queryWrapper);
+        return PageUtil.convert(registrationDOIPage, each -> {
+
+            return BeanUtil.convert(each, RegistrationQueryRespDTO.class);
+        });
+
     }
 
     private <T> T remoteCallsResultHandle(Result<T> result){

@@ -1,7 +1,9 @@
 package top.xblog1.emr.services.notice.services;
 
 import jakarta.validation.Valid;
+import top.xblog1.emr.framework.starter.convention.page.PageResponse;
 import top.xblog1.emr.services.notice.dto.req.NoticeCreateReqDTO;
+import top.xblog1.emr.services.notice.dto.req.NoticePageQueryReqDTO;
 import top.xblog1.emr.services.notice.dto.req.NoticeUpdateReqDTO;
 import top.xblog1.emr.services.notice.dto.resp.NoticeCreateRespDTO;
 import top.xblog1.emr.services.notice.dto.resp.NoticeQueryRespDTO;
@@ -19,4 +21,6 @@ public interface NoticeServices {
     NoticeUpdateRespDTO update(NoticeUpdateReqDTO requestParam);
 
     NoticeQueryRespDTO queryById(@Valid Long id);
+
+    PageResponse<NoticeQueryRespDTO> pageQuery(NoticePageQueryReqDTO requestParam);
 }

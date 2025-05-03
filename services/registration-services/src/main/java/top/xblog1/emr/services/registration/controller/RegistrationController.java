@@ -3,9 +3,11 @@ package top.xblog1.emr.services.registration.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import top.xblog1.emr.framework.starter.convention.page.PageResponse;
 import top.xblog1.emr.framework.starter.convention.result.Result;
 import top.xblog1.emr.framework.starter.web.Results;
 import top.xblog1.emr.services.registration.dto.req.RegistrationCreateReqDTO;
+import top.xblog1.emr.services.registration.dto.req.RegistrationPageQueryReqDTO;
 import top.xblog1.emr.services.registration.dto.req.RegistrationUpdateReqDTO;
 import top.xblog1.emr.services.registration.dto.resp.RegistrationCreateRespDTO;
 import top.xblog1.emr.services.registration.dto.resp.RegistrationQueryRespDTO;
@@ -71,5 +73,14 @@ public class RegistrationController {
         registrationServices.finish(id);
         return Results.success();
     }
-    //TODO 分页查询
+
+    /**
+    * 分页查询
+    * @param requestParam
+    * @return Result<PageResponse<RegistrationQueryRespDTO>>
+    */
+    @GetMapping("/v1/pageQuery")
+    public Result<PageResponse<RegistrationQueryRespDTO>> pageQuery(RegistrationPageQueryReqDTO requestParam){
+        return Results.success(registrationServices.pageQuery(requestParam));
+    }
 }

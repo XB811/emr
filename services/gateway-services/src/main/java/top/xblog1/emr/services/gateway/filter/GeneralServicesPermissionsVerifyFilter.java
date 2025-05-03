@@ -11,6 +11,7 @@ import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
+import reactor.core.publisher.Mono;
 import top.xblog1.emr.framework.starter.base.constant.UserConstant;
 import top.xblog1.emr.framework.starter.cache.DistributedCache;
 import top.xblog1.emr.framework.starter.common.enums.UserTypeEnum;
@@ -18,6 +19,7 @@ import top.xblog1.emr.services.gateway.toolkit.UserInfoDTO;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -75,6 +77,18 @@ public class GeneralServicesPermissionsVerifyFilter extends AbstractGatewayFilte
 //                log.info("userInfoDTO:{}", userInfo1);
                 String s = redisTemplate.opsForValue().get(token);
                 userInfo1=JSON.parseObject(s, UserInfoDTO.class);
+                //如果有token，但是token无效，手动返回异常
+                if(userInfo1 == null){
+                    ServerHttpResponse response = exchange.getResponse();
+                    // 创建包含错误信息的JSON响应
+                    Map<String, Object> responseBody = new HashMap<>();
+                    responseBody.put("code", "A100001");
+                    responseBody.put("message", "token无效或已过期");
+                    responseBody.put("data", null);
+                    // 将响应内容转换为字节并写入响应体
+                    byte[] bytes = JSON.toJSONString(responseBody).getBytes(StandardCharsets.UTF_8);
+                    return response.writeWith(Mono.just(response.bufferFactory().wrap(bytes)));
+                }
             }
 
             UserInfoDTO userInfo = userInfo1;

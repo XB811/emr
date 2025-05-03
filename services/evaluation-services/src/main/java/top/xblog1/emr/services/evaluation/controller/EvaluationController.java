@@ -3,16 +3,18 @@ package top.xblog1.emr.services.evaluation.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import top.xblog1.emr.framework.starter.convention.page.PageResponse;
 import top.xblog1.emr.framework.starter.convention.result.Result;
 import top.xblog1.emr.framework.starter.web.Results;
 import top.xblog1.emr.services.evaluation.dto.req.EvaluationCreateReqDTO;
+import top.xblog1.emr.services.evaluation.dto.req.EvaluationPageQueryReqDTO;
 import top.xblog1.emr.services.evaluation.dto.req.EvaluationUpdateReqDTO;
 import top.xblog1.emr.services.evaluation.dto.resp.EvaluationCreateRespDTO;
 import top.xblog1.emr.services.evaluation.dto.resp.EvaluationQueryRespDTO;
 import top.xblog1.emr.services.evaluation.services.EvaluationServices;
 
 /**
- *
+ * 电子病历管理
  */
 @RestController
 @RequestMapping("/api/evaluation-services")
@@ -39,7 +41,6 @@ public class EvaluationController {
         evaluationServices.delete(id);
         return Results.success();
     }
-    //TODO 就诊评价修改接口 暂不考虑实现
     
     /**
     * 根据id查询评价
@@ -69,5 +70,9 @@ public class EvaluationController {
     public Result<Void> updateEmr(@RequestBody EvaluationUpdateReqDTO requestParam){
         evaluationServices.update(requestParam);
         return Results.success();
+    }
+    @GetMapping("/v1/pageQuery")
+    public Result<PageResponse<EvaluationQueryRespDTO>> pageQuery(@RequestBody EvaluationPageQueryReqDTO requestParam){
+        return Results.success(evaluationServices.pageQuery(requestParam));
     }
 }

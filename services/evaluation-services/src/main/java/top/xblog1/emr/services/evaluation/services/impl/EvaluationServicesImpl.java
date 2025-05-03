@@ -2,6 +2,7 @@ package top.xblog1.emr.services.evaluation.services.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.beanutils.BeanUtils;
@@ -10,9 +11,12 @@ import org.springframework.stereotype.Service;
 import top.xblog1.emr.framework.starter.common.toolkit.BeanUtil;
 import top.xblog1.emr.framework.starter.convention.exception.ClientException;
 import top.xblog1.emr.framework.starter.convention.exception.ServiceException;
+import top.xblog1.emr.framework.starter.convention.page.PageResponse;
+import top.xblog1.emr.framework.starter.database.toolkit.PageUtil;
 import top.xblog1.emr.services.evaluation.dao.entity.EvaluationDO;
 import top.xblog1.emr.services.evaluation.dao.mapper.EvaluationMapper;
 import top.xblog1.emr.services.evaluation.dto.req.EvaluationCreateReqDTO;
+import top.xblog1.emr.services.evaluation.dto.req.EvaluationPageQueryReqDTO;
 import top.xblog1.emr.services.evaluation.dto.req.EvaluationUpdateReqDTO;
 import top.xblog1.emr.services.evaluation.dto.resp.EvaluationCreateRespDTO;
 import top.xblog1.emr.services.evaluation.dto.resp.EvaluationQueryRespDTO;
@@ -83,5 +87,19 @@ public class EvaluationServicesImpl implements EvaluationServices {
             throw new ServiceException("更新评价失败");
         }
 
+    }
+
+    @Override
+    public PageResponse<EvaluationQueryRespDTO> pageQuery(EvaluationPageQueryReqDTO requestParam) {
+        LambdaQueryWrapper<EvaluationDO> queryWrapper = Wrappers.lambdaQuery(EvaluationDO.class);
+        if(requestParam.getPatientId()!=null)
+            queryWrapper.eq(EvaluationDO::getPatientId,requestParam.getPatientId());
+        if(requestParam.getDoctorId()!=null)
+            queryWrapper.eq(EvaluationDO::getDoctorId,requestParam.getDoctorId());
+        queryWrapper.orderByDesc(EvaluationDO::getUpdateTime);
+        IPage<EvaluationDO> evaluationDOIPage = evaluationMapper.selectPage(PageUtil.convert(requestParam),queryWrapper);
+        return PageUtil.convert(evaluationDOIPage,each ->{
+            return BeanUtil.convert(each, EvaluationQueryRespDTO.class);
+        });
     }
 }

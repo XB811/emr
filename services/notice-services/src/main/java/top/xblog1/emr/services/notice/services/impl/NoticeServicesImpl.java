@@ -1,13 +1,19 @@
 package top.xblog1.emr.services.notice.services.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import top.xblog1.emr.framework.starter.common.toolkit.BeanUtil;
 import top.xblog1.emr.framework.starter.convention.exception.ClientException;
 import top.xblog1.emr.framework.starter.convention.exception.ServiceException;
+import top.xblog1.emr.framework.starter.convention.page.PageResponse;
+import top.xblog1.emr.framework.starter.database.toolkit.PageUtil;
 import top.xblog1.emr.services.notice.dao.entity.NoticeDO;
 import top.xblog1.emr.services.notice.dao.mapper.NoticeMapper;
 import top.xblog1.emr.services.notice.dto.req.NoticeCreateReqDTO;
+import top.xblog1.emr.services.notice.dto.req.NoticePageQueryReqDTO;
 import top.xblog1.emr.services.notice.dto.req.NoticeUpdateReqDTO;
 import top.xblog1.emr.services.notice.dto.resp.NoticeCreateRespDTO;
 import top.xblog1.emr.services.notice.dto.resp.NoticeQueryRespDTO;
@@ -74,5 +80,24 @@ public class NoticeServicesImpl implements NoticeServices {
             throw new ClientException("公告"+id+"不存在");
         }
         return BeanUtil.convert(noticeDO, NoticeQueryRespDTO.class);
+    }
+
+    @Override
+    public PageResponse<NoticeQueryRespDTO> pageQuery(NoticePageQueryReqDTO requestParam) {
+        LambdaQueryWrapper<NoticeDO> queryWrapper = Wrappers.lambdaQuery(NoticeDO.class);
+        if(requestParam.getAdminId() !=null)
+            queryWrapper.eq(NoticeDO::getAdminId, requestParam.getAdminId());
+        if(requestParam.getAdminName()!=null&& !requestParam.getAdminName().isEmpty())
+            queryWrapper.like(NoticeDO::getAdminName, requestParam.getAdminName());
+        if(requestParam.getTitle()!=null&& !requestParam.getTitle().isEmpty())
+            queryWrapper.like(NoticeDO::getTitle,requestParam.getTitle());
+        if(requestParam.getContent()!=null&& !requestParam.getContent().isEmpty())
+            queryWrapper.like(NoticeDO::getContent,requestParam.getContent());
+        queryWrapper.orderByDesc(NoticeDO::getUpdateTime);
+        IPage<NoticeDO> noticeIPage =noticeMapper.selectPage(PageUtil.convert(requestParam), queryWrapper);
+        return PageUtil.convert(noticeIPage, each -> {
+
+            return BeanUtil.convert(each, NoticeQueryRespDTO.class);
+        });
     }
 }

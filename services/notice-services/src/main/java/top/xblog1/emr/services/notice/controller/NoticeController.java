@@ -3,9 +3,11 @@ package top.xblog1.emr.services.notice.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import top.xblog1.emr.framework.starter.convention.page.PageResponse;
 import top.xblog1.emr.framework.starter.convention.result.Result;
 import top.xblog1.emr.framework.starter.web.Results;
 import top.xblog1.emr.services.notice.dto.req.NoticeCreateReqDTO;
+import top.xblog1.emr.services.notice.dto.req.NoticePageQueryReqDTO;
 import top.xblog1.emr.services.notice.dto.req.NoticeUpdateReqDTO;
 import top.xblog1.emr.services.notice.dto.resp.NoticeCreateRespDTO;
 import top.xblog1.emr.services.notice.dto.resp.NoticeQueryRespDTO;
@@ -57,5 +59,14 @@ public class NoticeController {
     public Result<NoticeQueryRespDTO> queryById(@PathVariable @Valid Long id){
         return Results.success(noticeServices.queryById(id));
     }
-    //TODO 分页查询
+
+    /**
+    * 分页查询
+    * @param requestParam
+    * @return Result<NoticeQueryRespDTO>
+    */
+    @GetMapping("/v1/pageQuery")
+    public Result<PageResponse<NoticeQueryRespDTO>> pageQuery(@RequestBody NoticePageQueryReqDTO requestParam){
+        return Results.success(noticeServices.pageQuery(requestParam));
+    }
 }
