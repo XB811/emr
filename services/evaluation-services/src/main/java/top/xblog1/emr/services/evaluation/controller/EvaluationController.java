@@ -14,7 +14,7 @@ import top.xblog1.emr.services.evaluation.dto.resp.EvaluationQueryRespDTO;
 import top.xblog1.emr.services.evaluation.services.EvaluationServices;
 
 /**
- * 电子病历管理
+ * 就诊评价管理
  */
 @RestController
 @RequestMapping("/api/evaluation-services")
@@ -72,7 +72,7 @@ public class EvaluationController {
         return Results.success();
     }
     @GetMapping("/v1/pageQuery")
-    public Result<PageResponse<EvaluationQueryRespDTO>> pageQuery(@RequestBody EvaluationPageQueryReqDTO requestParam){
+    public Result<PageResponse<EvaluationQueryRespDTO>> pageQuery( EvaluationPageQueryReqDTO requestParam){
         return Results.success(evaluationServices.pageQuery(requestParam));
     }
 }

@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Bean;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,6 +31,7 @@ import top.xblog1.emr.services.user.toolkit.PasswordEncryptUtil;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
 import static top.xblog1.emr.services.user.common.constant.RedisKeyConstant.USER_REGISTER_PHONE_DOCTOR;
@@ -143,7 +145,7 @@ public class DoctorInfoStrategy extends AbstractUserExecuteStrategy {
         //分页查询
         LambdaQueryWrapper<DoctorDO> queryWrapper = Wrappers.lambdaQuery(DoctorDO.class);
         if(requestParam.getPhone() !=null&& !requestParam.getPhone().isEmpty())
-            queryWrapper.eq(DoctorDO::getPhone,requestParam.getPhone());
+            queryWrapper.like(DoctorDO::getPhone,requestParam.getPhone());
         if(requestParam.getUsername()!=null&& !requestParam.getUsername().isEmpty())
                 queryWrapper.like(DoctorDO::getUsername,requestParam.getUsername());
         if(requestParam.getRealName()!=null&& !requestParam.getRealName().isEmpty())
@@ -160,5 +162,11 @@ public class DoctorInfoStrategy extends AbstractUserExecuteStrategy {
                 .userPageQueryRespDTO(response)
                 .build();
 
+    }
+    // TODO 修改为redis存储
+    public BaseUserDTO queryAll(BaseUserDTO request){
+        List<DoctorDO> doctorDOS = doctorMapper.selectList(Wrappers.lambdaQuery(DoctorDO.class));
+        List<UserQueryRespDTO> convert = BeanUtil.convert(doctorDOS, UserQueryRespDTO.class);
+        return BaseUserDTO.builder().userQueryRespDTOList(convert).build();
     }
 }

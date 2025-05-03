@@ -65,7 +65,7 @@ public class EmrController {
     * @return
     */
     @GetMapping("/v1/pageQuery")
-    public Result<PageResponse<EmrQueryRespDTO>> pageQuery(@RequestBody EmrPageQueryReqDTO requestParam){
+    public Result<PageResponse<EmrQueryRespDTO>> pageQuery( EmrPageQueryReqDTO requestParam){
         return Results.success(emrServices.pageQuery(requestParam));
     }
 }

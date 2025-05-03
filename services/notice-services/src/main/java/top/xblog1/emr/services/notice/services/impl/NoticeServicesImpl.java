@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import top.xblog1.emr.framework.starter.common.toolkit.BeanUtil;
 import top.xblog1.emr.framework.starter.convention.exception.ClientException;
@@ -25,6 +26,7 @@ import top.xblog1.emr.services.notice.services.NoticeServices;
  */
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class NoticeServicesImpl implements NoticeServices {
     private final NoticeMapper noticeMapper;
 
@@ -84,6 +86,7 @@ public class NoticeServicesImpl implements NoticeServices {
 
     @Override
     public PageResponse<NoticeQueryRespDTO> pageQuery(NoticePageQueryReqDTO requestParam) {
+        log.info(requestParam.toString());
         LambdaQueryWrapper<NoticeDO> queryWrapper = Wrappers.lambdaQuery(NoticeDO.class);
         if(requestParam.getAdminId() !=null)
             queryWrapper.eq(NoticeDO::getAdminId, requestParam.getAdminId());

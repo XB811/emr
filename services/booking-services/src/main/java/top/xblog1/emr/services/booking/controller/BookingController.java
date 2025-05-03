@@ -78,7 +78,7 @@ public class BookingController {
     * @return Result<PageResponse<BookingQueryRespDTO>> 
     */
     @GetMapping("/v1/pageQuery")
-    public Result<PageResponse<BookingQueryRespDTO>> pageQuery(@RequestBody BookingPageQueryReqDTO requestParam){
+    public Result<PageResponse<BookingQueryRespDTO>> pageQuery( BookingPageQueryReqDTO requestParam){
         return Results.success(bookingServices.pageQuery(requestParam));
     }
 }

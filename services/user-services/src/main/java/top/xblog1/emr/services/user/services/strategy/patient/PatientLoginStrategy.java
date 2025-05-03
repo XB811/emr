@@ -150,6 +150,8 @@ public class PatientLoginStrategy extends AbstractUserExecuteStrategy {
             LambdaQueryWrapper<PatientDO> queryWrapper = Wrappers.lambdaQuery(PatientDO.class)
                     .eq(PatientDO::getUsername, requestParam.getUsername());
             PatientDO patientDO = patientMapper.selectOne(queryWrapper);
+            if(patientDO==null)
+                throw new ClientException("该用户id不存在");
             //删除数据库
             patientDO.setUpdateTime(null);
             patientMapper.updateById(patientDO);

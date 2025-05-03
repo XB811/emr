@@ -154,7 +154,7 @@ public class AdminInfoStrategy extends AbstractUserExecuteStrategy {
         //分页查询
         LambdaQueryWrapper<AdminDO> queryWrapper = Wrappers.lambdaQuery(AdminDO.class);
         if(requestParam.getPhone() !=null&& !requestParam.getPhone().isEmpty())
-            queryWrapper.eq(AdminDO::getPhone,requestParam.getPhone());
+            queryWrapper.like(AdminDO::getPhone,requestParam.getPhone());
         if(requestParam.getUsername()!=null&& !requestParam.getUsername().isEmpty())
             queryWrapper.like(AdminDO::getUsername,requestParam.getUsername());
         if(requestParam.getRealName()!=null&& !requestParam.getRealName().isEmpty())

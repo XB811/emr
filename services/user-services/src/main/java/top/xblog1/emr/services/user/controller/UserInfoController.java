@@ -19,6 +19,8 @@ import top.xblog1.emr.services.user.dto.resp.UserRegisterRespDTO;
 import top.xblog1.emr.services.user.services.UserLoginService;
 import top.xblog1.emr.services.user.services.UserService;
 
+import java.util.List;
+
 /**
  * 用户信息管理模块
  */
@@ -125,10 +127,14 @@ public class UserInfoController {
      * @param userType 
     * @return Result<PageResponse<UserQueryRespDTO>> 
     */
-    @GetMapping("/v1/page/{userType}")
-    public Result<PageResponse<UserQueryRespDTO>> pageQueryUser(@RequestBody @Valid UserPageQueryReqDTO requestParam,
+    @GetMapping("/v1/pageQuery/{userType}")
+    public Result<PageResponse<UserQueryRespDTO>> pageQueryUser(UserPageQueryReqDTO requestParam,
                                                                 @PathVariable @NotEmpty String userType) {
         return Results.success(userService.pageQuery(requestParam,userType));
         
+    }
+    @GetMapping("/v1/queryAll/{userType}")
+    public Result<List<UserQueryRespDTO>> queryAllUser(@PathVariable @NotEmpty String userType) {
+        return Results.success(userService.queryAll(userType));
     }
 }

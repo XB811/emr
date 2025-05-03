@@ -11,6 +11,7 @@ import top.xblog1.emr.services.user.serialize.PhoneDesensitizationSerializer;
  */
 @Data
 public class UserQueryRespDTO {
+    private String id;
     /**
      * 用户名
      */

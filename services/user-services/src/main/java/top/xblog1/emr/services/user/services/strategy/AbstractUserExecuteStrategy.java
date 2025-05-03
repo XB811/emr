@@ -48,7 +48,7 @@ public class AbstractUserExecuteStrategy implements AbstractExecuteStrategy<Base
             if(cause instanceof AbstractException) {
                 throw (AbstractException) cause;
             }else{
-                throw new ServiceException("方法"+ite.getStackTrace()[0].getMethodName()+"调用失败"); // 处理其他异常
+                throw new ServiceException("方法"+ite.getStackTrace()[0].getMethodName()+"调用失败"+cause); // 处理其他异常
             }
         } catch (Exception e) {
             throw new ServiceException("方法调用失败"+e.getMessage());

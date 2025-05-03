@@ -66,7 +66,7 @@ public class NoticeController {
     * @return Result<NoticeQueryRespDTO>
     */
     @GetMapping("/v1/pageQuery")
-    public Result<PageResponse<NoticeQueryRespDTO>> pageQuery(@RequestBody NoticePageQueryReqDTO requestParam){
+    public Result<PageResponse<NoticeQueryRespDTO>> pageQuery( NoticePageQueryReqDTO requestParam){
         return Results.success(noticeServices.pageQuery(requestParam));
     }
 }

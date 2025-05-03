@@ -150,6 +150,8 @@ public class AdminLoginStrategy extends AbstractUserExecuteStrategy {
             LambdaQueryWrapper<AdminDO> queryWrapper = Wrappers.lambdaQuery(AdminDO.class)
                     .eq(AdminDO::getUsername, requestParam.getUsername());
             AdminDO adminDO = adminMapper.selectOne(queryWrapper);
+            if(adminDO==null)
+                throw new ClientException("该用户id不存在");
             //更新 删除时间
             adminDO.setUpdateTime(null);
             adminMapper.updateById(adminDO);

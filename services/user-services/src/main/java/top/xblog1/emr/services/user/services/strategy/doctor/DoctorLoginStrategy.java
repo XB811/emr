@@ -135,6 +135,8 @@ public class DoctorLoginStrategy extends AbstractUserExecuteStrategy {
             LambdaQueryWrapper<DoctorDO> queryWrapper = Wrappers.lambdaQuery(DoctorDO.class)
                     .eq(DoctorDO::getUsername, requestParam.getUsername());
             DoctorDO doctorDO = doctorMapper.selectOne(queryWrapper);
+            if(doctorDO==null)
+                throw new ClientException("该用户id不存在");
             //更新 删除时间
             doctorDO.setUpdateTime(null);
             doctorMapper.updateById(doctorDO);

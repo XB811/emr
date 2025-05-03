@@ -80,7 +80,7 @@ public class DepartmentController {
     * @return Result<PageResponse<DepartmentQueryRespDTO>> 
     */
     @GetMapping("/v1/pageQuery")
-    public Result<PageResponse<DepartmentQueryRespDTO>> pageQuery(@RequestBody DepartmentPageQueryReqDTO requestParam){
+    public Result<PageResponse<DepartmentQueryRespDTO>> pageQuery( DepartmentPageQueryReqDTO requestParam){
         return  Results.success(departmentServices.pageQuery(requestParam));
     }
 }
