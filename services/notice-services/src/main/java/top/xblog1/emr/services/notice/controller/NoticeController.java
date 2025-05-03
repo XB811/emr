@@ -13,7 +13,7 @@ import top.xblog1.emr.services.notice.dto.resp.NoticeUpdateRespDTO;
 import top.xblog1.emr.services.notice.services.NoticeServices;
 
 /**
- *
+ * 公告管理
  */
 @RestController
 @RequestMapping("/api/notice-services")

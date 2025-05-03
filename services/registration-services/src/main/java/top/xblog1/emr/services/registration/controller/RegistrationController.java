@@ -13,7 +13,7 @@ import top.xblog1.emr.services.registration.dto.resp.RegistrationUpdateRespDTO;
 import top.xblog1.emr.services.registration.services.RegistrationServices;
 
 /**
- *
+ * 挂号管理
  */
 @RestController
 @RequestMapping("/api/registration-services")

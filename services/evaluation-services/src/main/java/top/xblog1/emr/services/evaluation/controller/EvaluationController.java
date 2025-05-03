@@ -59,7 +59,12 @@ public class EvaluationController {
     public Result<EvaluationQueryRespDTO> queryByEmrId(@PathVariable @Valid Long emrId){
         return Results.success(evaluationServices.queryByEmrId(emrId));
     }
-
+    
+    /**
+    * 更新评价
+    * @param requestParam 
+    * @return Result<Void> 
+    */
     @PutMapping("/v1/update")
     public Result<Void> updateEmr(@RequestBody EvaluationUpdateReqDTO requestParam){
         evaluationServices.update(requestParam);

@@ -15,7 +15,7 @@ import top.xblog1.emr.services.booking.dto.resp.BookingUpdateRespDTO;
 import top.xblog1.emr.services.booking.services.BookingServices;
 
 /**
- *
+ * 预约时间管理
  */
 @RestController
 @RequestMapping("/api/booking-services")
