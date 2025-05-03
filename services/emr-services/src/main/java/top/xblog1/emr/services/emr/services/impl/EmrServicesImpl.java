@@ -1,17 +1,23 @@
 package top.xblog1.emr.services.emr.services.impl;
 
 import cn.hutool.core.util.IdcardUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import top.xblog1.emr.framework.starter.common.enums.UserTypeEnum;
 import top.xblog1.emr.framework.starter.common.toolkit.BeanUtil;
 import top.xblog1.emr.framework.starter.convention.exception.ServiceException;
+import top.xblog1.emr.framework.starter.convention.page.PageResponse;
 import top.xblog1.emr.framework.starter.convention.result.Result;
+import top.xblog1.emr.framework.starter.database.toolkit.PageUtil;
 import top.xblog1.emr.services.emr.common.enums.EmrErrorCodeEnum;
 import top.xblog1.emr.services.emr.dao.entity.EmrDO;
 import top.xblog1.emr.services.emr.dao.mapper.EmrMapper;
 import top.xblog1.emr.services.emr.dto.req.EmrCreateReqDTO;
+import top.xblog1.emr.services.emr.dto.req.EmrPageQueryReqDTO;
 import top.xblog1.emr.services.emr.dto.req.EmrUpdateReqDTO;
 import top.xblog1.emr.services.emr.dto.resp.EmrCreateRespDTO;
 import top.xblog1.emr.services.emr.dto.resp.EmrQueryRespDTO;
@@ -116,6 +122,29 @@ public class EmrServicesImpl implements EmrServices {
             throw new ServiceException(QUERY_FAIL);
         }
         return BeanUtil.convert(emrDO, EmrQueryRespDTO.class);
+    }
+
+    @Override
+    public PageResponse<EmrQueryRespDTO> pageQuery(EmrPageQueryReqDTO requestParam) {
+        LambdaQueryWrapper<EmrDO>queryWrapper = Wrappers.lambdaQuery(EmrDO.class);
+        if(requestParam.getPatientId() != null){
+            queryWrapper.eq(EmrDO::getPatientId, requestParam.getPatientId());
+        }
+        if(requestParam.getDepartmentId() != null){
+            queryWrapper.eq(EmrDO::getDepartmentId, requestParam.getDepartmentId());
+        }
+        if(requestParam.getDoctorId() != null){
+            queryWrapper.eq(EmrDO::getDoctorId, requestParam.getDoctorId());
+        }
+        if(requestParam.getRealName() != null&& !requestParam.getRealName().isEmpty()){
+            queryWrapper.like(EmrDO::getRealName, requestParam.getRealName());
+        }
+        queryWrapper.orderByDesc(EmrDO::getUpdateTime);
+        IPage<EmrDO> emrDOIPage = emrMapper.selectPage(PageUtil.convert(requestParam), queryWrapper);
+        return PageUtil.convert(emrDOIPage, each ->{
+            return BeanUtil.convert(each, EmrQueryRespDTO.class);
+        });
+
     }
 
     private <T> T remoteCallsResultHandle(Result<T> result){

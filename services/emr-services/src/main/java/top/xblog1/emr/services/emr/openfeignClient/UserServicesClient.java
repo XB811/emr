@@ -9,11 +9,17 @@ import top.xblog1.emr.framework.starter.convention.result.Result;
 import top.xblog1.emr.services.emr.openfeignClient.resp.UserQueryActualRespDTO;
 
 /**
- *
+ * 远程调用-user
  */
 @FeignClient("emr-user-services")
 public interface UserServicesClient {
 
+    /**
+    * 获取用户真实信息
+    * @param id 
+     * @param userType 
+    * @return Result<UserQueryActualRespDTO> 
+    */
     @GetMapping("/api/user-services/v1/actualQuery/{userType}/{id}")
     Result<UserQueryActualRespDTO> queryActualUserByIDAndUserType(@PathVariable("id")  Long id,
                                                                   @PathVariable("userType") String userType);

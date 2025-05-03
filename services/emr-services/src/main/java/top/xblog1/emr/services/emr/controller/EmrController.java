@@ -2,9 +2,11 @@ package top.xblog1.emr.services.emr.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import top.xblog1.emr.framework.starter.convention.page.PageResponse;
 import top.xblog1.emr.framework.starter.convention.result.Result;
 import top.xblog1.emr.framework.starter.web.Results;
 import top.xblog1.emr.services.emr.dto.req.EmrCreateReqDTO;
+import top.xblog1.emr.services.emr.dto.req.EmrPageQueryReqDTO;
 import top.xblog1.emr.services.emr.dto.req.EmrUpdateReqDTO;
 import top.xblog1.emr.services.emr.dto.resp.EmrCreateRespDTO;
 import top.xblog1.emr.services.emr.dto.resp.EmrQueryRespDTO;
@@ -12,7 +14,7 @@ import top.xblog1.emr.services.emr.dto.resp.EmrUpdateRespDTO;
 import top.xblog1.emr.services.emr.services.EmrServices;
 
 /**
- *
+ * 病历管理
  */
 @RestController
 @RequestMapping("/api/emr-services")
@@ -57,5 +59,13 @@ public class EmrController {
     public Result<EmrQueryRespDTO> queryById(@PathVariable Long id){
         return Results.success(emrServices.queryById(id));
     }
-    // TODO 电子病历分页查询
+    /**
+    * 分页查询
+    * @param requestParam
+    * @return
+    */
+    @GetMapping("/v1/pageQuery")
+    public Result<PageResponse<EmrQueryRespDTO>> pageQuery(@RequestBody EmrPageQueryReqDTO requestParam){
+        return Results.success(emrServices.pageQuery(requestParam));
+    }
 }
