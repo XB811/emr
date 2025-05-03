@@ -24,5 +24,9 @@ public class UserPageQueryReqDTO extends PageRequest {
      * 身份证号
      */
     private String idCard;
+    /**
+     * 科室id
+     */
+    private Long departmentId;
 
 }

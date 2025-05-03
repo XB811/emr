@@ -148,6 +148,8 @@ public class DoctorInfoStrategy extends AbstractUserExecuteStrategy {
                 queryWrapper.like(DoctorDO::getUsername,requestParam.getUsername());
         if(requestParam.getRealName()!=null&& !requestParam.getRealName().isEmpty())
                 queryWrapper.like(DoctorDO::getRealName,requestParam.getRealName());
+        if(requestParam.getDepartmentId()!=null)
+            queryWrapper.eq(DoctorDO::getDepartmentId,requestParam.getDepartmentId());
         queryWrapper.orderByDesc(DoctorDO::getUpdateTime);
         IPage<DoctorDO> doctorDOIPage =doctorMapper.selectPage(PageUtil.convert(requestParam), queryWrapper);
         PageResponse<UserQueryRespDTO> response = PageUtil.convert(doctorDOIPage, each -> {
