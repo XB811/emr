@@ -13,6 +13,8 @@ import top.xblog1.emr.services.user.dto.resp.UserQueryActualRespDTO;
 import top.xblog1.emr.services.user.dto.resp.UserQueryRespDTO;
 import top.xblog1.emr.services.user.dto.resp.UserRegisterRespDTO;
 
+import java.util.List;
+
 /**
  *
  */
@@ -33,6 +35,7 @@ public class BaseUserDTO {
     private UserQueryRespDTO userQueryRespDTO;
     private UserPageQueryReqDTO userPageQueryReqDTO;
     private PageResponse<UserQueryRespDTO> userPageQueryRespDTO;
+    private List<UserQueryRespDTO> userQueryRespDTOList;
     //用户id
     private Long id;
     //用户名

@@ -139,6 +139,15 @@ public class EmrServicesImpl implements EmrServices {
         if(requestParam.getRealName() != null&& !requestParam.getRealName().isEmpty()){
             queryWrapper.like(EmrDO::getRealName, requestParam.getRealName());
         }
+        if(requestParam.getDoctorName() != null&& !requestParam.getDoctorName().isEmpty()){
+            queryWrapper.like(EmrDO::getDoctorName, requestParam.getDoctorName());
+        }
+        if(requestParam.getDepartmentName() != null&& !requestParam.getDepartmentName().isEmpty()){
+            queryWrapper.like(EmrDO::getDepartmentName, requestParam.getDepartmentName());
+        }
+        if(requestParam.getDepartmentCode() != null&& !requestParam.getDepartmentCode().isEmpty()){
+            queryWrapper.like(EmrDO::getDepartmentCode, requestParam.getDepartmentCode());
+        }
         queryWrapper.orderByDesc(EmrDO::getUpdateTime);
         IPage<EmrDO> emrDOIPage = emrMapper.selectPage(PageUtil.convert(requestParam), queryWrapper);
         return PageUtil.convert(emrDOIPage, each ->{

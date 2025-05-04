@@ -24,4 +24,6 @@ public interface EvaluationServices {
     void update(EvaluationUpdateReqDTO requestParam);
 
     PageResponse<EvaluationQueryRespDTO> pageQuery(EvaluationPageQueryReqDTO requestParam);
+
+    Boolean hasEvaluation(String emrId);
 }

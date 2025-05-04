@@ -113,7 +113,8 @@ public class BookingServicesImpl implements BookingServices {
             queryWrapper.like(BookingDO::getDoctorId,requestParam.getDoctorId());
         if(requestParam.getDoctorName()!=null&& !requestParam.getDoctorName().isEmpty())
             queryWrapper.like(BookingDO::getDoctorName,requestParam.getDoctorName());
-        queryWrapper.eq(BookingDO::getIsAvailable,requestParam.getIsAvailable());
+        if(requestParam.getIsAvailable()!=null)
+            queryWrapper.eq(BookingDO::getIsAvailable,requestParam.getIsAvailable());
         queryWrapper.orderByDesc(BookingDO::getUpdateTime);
         IPage<BookingDO> bookingDOIPageDO = bookingMapper.selectPage(PageUtil.convert(requestParam),queryWrapper);
         return PageUtil.convert(bookingDOIPageDO, each -> {

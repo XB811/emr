@@ -9,6 +9,8 @@ import top.xblog1.emr.services.user.dto.req.UserUpdateReqDTO;
 import top.xblog1.emr.services.user.dto.resp.UserQueryActualRespDTO;
 import top.xblog1.emr.services.user.dto.resp.UserQueryRespDTO;
 
+import java.util.List;
+
 /**
  * 用户信息管理服务层接口
  */
@@ -40,4 +42,6 @@ public interface UserService {
     void updatePassword(UpdatePasswordReqDTO requestParam, @NotEmpty String userType);
 
     PageResponse<UserQueryRespDTO> pageQuery(@Valid UserPageQueryReqDTO requestParam, @NotEmpty String userType);
+
+    List<UserQueryRespDTO> queryAll(@NotEmpty String userType);
 }

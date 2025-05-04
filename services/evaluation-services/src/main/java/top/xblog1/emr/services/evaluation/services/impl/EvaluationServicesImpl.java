@@ -102,4 +102,13 @@ public class EvaluationServicesImpl implements EvaluationServices {
             return BeanUtil.convert(each, EvaluationQueryRespDTO.class);
         });
     }
+
+    @Override
+    public Boolean hasEvaluation(String emrId) {
+        LambdaQueryWrapper<EvaluationDO> queryWrapper = Wrappers.lambdaQuery(EvaluationDO.class)
+                .eq(EvaluationDO::getEmrId,emrId);
+        if(evaluationMapper.selectCount(queryWrapper)>0)
+            return true;
+        return false;
+    }
 }

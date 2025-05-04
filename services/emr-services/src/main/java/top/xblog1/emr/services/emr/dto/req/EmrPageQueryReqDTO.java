@@ -13,4 +13,7 @@ public class EmrPageQueryReqDTO extends PageRequest {
     private Long doctorId;
     private String realName;
 
+    private String doctorName;
+    private String departmentCode;
+    private String departmentName;
 }

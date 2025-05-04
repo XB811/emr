@@ -97,6 +97,7 @@ emr:
       # 病历id查询
       "/api/evaluation-services/v1/queryByEmrId" : ["root","patient","admin","doctor"]
       "/api/evaluation-services/v1/pageQuery": ["root","patient","admin","doctor"]
+      "/api/evaluation-services/v1/hasEvaluation": ["root","patient","admin","doctor"]
     #公告管理
       #新增公告
       "/api/notice-services/v1/create": ["root","admin"]

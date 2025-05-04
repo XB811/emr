@@ -168,8 +168,8 @@ public class RegistrationServicesImpl implements RegistrationServices {
     @Override
     public PageResponse<RegistrationQueryRespDTO> pageQuery(RegistrationPageQueryReqDTO requestParam) {
         LambdaQueryWrapper<RegistrationDO> queryWrapper = Wrappers.lambdaQuery(RegistrationDO.class);
-        if(requestParam.getPatientId() !=null)
-            queryWrapper.eq(RegistrationDO::getPatientId, requestParam.getPatientId());
+        if(requestParam.getPatientIds() !=null)
+            queryWrapper.in(RegistrationDO::getPatientId, requestParam.getPatientIds());
         if(requestParam.getDoctorId()!=null)
             queryWrapper.eq(RegistrationDO::getDoctorId,requestParam.getDoctorId());
         if(requestParam.getAppointmentDate()!=null)

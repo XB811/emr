@@ -71,8 +71,22 @@ public class EvaluationController {
         evaluationServices.update(requestParam);
         return Results.success();
     }
+    /**
+    * 分页查询
+    * @param requestParam 
+    * @return Result<PageResponse<EvaluationQueryRespDTO>> 
+    */
     @GetMapping("/v1/pageQuery")
     public Result<PageResponse<EvaluationQueryRespDTO>> pageQuery( EvaluationPageQueryReqDTO requestParam){
         return Results.success(evaluationServices.pageQuery(requestParam));
+    }
+    /**
+    * 查询emr是否已经被评价
+    * @param emrId 
+    * @return Result<Boolean> 
+    */
+    @GetMapping("/v1/hasEvaluation/{emrId}")
+    public Result<Boolean> hasEvaluation(@PathVariable String emrId){
+        return Results.success(evaluationServices.hasEvaluation(emrId));
     }
 }

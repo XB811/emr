@@ -17,8 +17,11 @@ import top.xblog1.emr.services.user.dto.resp.UserQueryRespDTO;
 import top.xblog1.emr.services.user.dto.strategy.BaseUserDTO;
 import top.xblog1.emr.services.user.services.UserService;
 
+import java.util.List;
+
 import static top.xblog1.emr.services.user.common.constant.UserExecuteStrategyContant.USER_INFO_STRATEGY_SUFFIX;
 import static top.xblog1.emr.services.user.common.enums.UserOperationTypeEnum.USER_PAGE_QUERY;
+import static top.xblog1.emr.services.user.common.enums.UserOperationTypeEnum.USER_QUERY_ALL;
 
 /**
  * 用户信息管理实现
@@ -91,5 +94,14 @@ public class UserInfoServiceImpl implements UserService {
                 .build();
         BaseUserDTO response = strategyChoose.chooseAndExecuteResp(userType+USER_INFO_STRATEGY_SUFFIX,request);
         return response.getUserPageQueryRespDTO();
+    }
+
+    @Override
+    public List<UserQueryRespDTO> queryAll(String userType) {
+        BaseUserDTO request =BaseUserDTO.builder()
+                .operationType(USER_QUERY_ALL)
+                .build();
+        BaseUserDTO response = strategyChoose.chooseAndExecuteResp(userType+USER_INFO_STRATEGY_SUFFIX,request);
+        return response.getUserQueryRespDTOList();
     }
 }

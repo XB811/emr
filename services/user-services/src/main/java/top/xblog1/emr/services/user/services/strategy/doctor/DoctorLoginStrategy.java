@@ -175,7 +175,7 @@ public class DoctorLoginStrategy extends AbstractUserExecuteStrategy {
      */
     public BaseUserDTO login(BaseUserDTO baseUserDTO){
         //拆包
-        UserLoginReqDTO requestParam = baseUserDTO.getUserLoginReqDTO();
+            UserLoginReqDTO requestParam = baseUserDTO.getUserLoginReqDTO();
         //根据username或者手机号分别查询
         LambdaQueryWrapper<DoctorDO> queryWrapperByUsername = Wrappers.lambdaQuery(DoctorDO.class)
                 .eq(DoctorDO::getUsername, requestParam.getUsernameOrPhone());
