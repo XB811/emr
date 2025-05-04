@@ -4,50 +4,67 @@
 services:
   # RocketMQ名称服务器配置
   # 负责维护主题的路由信息，提供服务发现和故障转移支持
-  rocketmq-nameserver:
-    image: apache/rocketmq:4.9.4  # 使用Apache RocketMQ 4.9.4版本镜像
-    container_name: rocketmq-nameserver  # 容器名称
-    command: sh mqnamesrv  # 启动名称服务器
-    ports:
-      - "9876:9876"  # 暴露命名服务器端口用于服务注册和发现
-    volumes:
-      - rocketmq_namesrv_data:/home/rocketmq/data  # 数据持久化
-      - rocketmq_namesrv_logs:/home/rocketmq/logs  # 日志持久化
-    restart: unless-stopped  # 容器停止时自动重启，除非手动停止
-    networks:
-      - emr-net  # 连接到EMR网络
-    deploy:
-      resources:
-        limits:
-          cpus: '0.5'  # 限制CPU使用率
-          memory: 1G   # 限制内存使用
+#  rocketmq-nameserver:
+#    image: apache/rocketmq:4.9.4  # 使用Apache RocketMQ 4.9.4版本镜像
+#    container_name: rocketmq-nameserver  # 容器名称
+#    command: sh mqnamesrv  # 启动名称服务器
+#    ports:
+#      - "9876:9876"  # 暴露命名服务器端口用于服务注册和发现
+#    volumes:
+#      - rocketmq_namesrv_data:/home/rocketmq/data  # 数据持久化
+#      - rocketmq_namesrv_logs:/home/rocketmq/logs  # 日志持久化
+#    restart: unless-stopped  # 容器停止时自动重启，除非手动停止
+#    networks:
+#      - emr-net  # 连接到EMR网络
+#    deploy:
+#      resources:
+#        limits:
+#          cpus: '0.5'  # 限制CPU使用率
+#          memory: 1G   # 限制内存使用
 
   # RocketMQ消息代理服务配置
   # 负责消息的存储、投递和高可用性保证
-  rocketmq-broker:
-    image: apache/rocketmq:4.9.4  # 使用Apache RocketMQ 4.9.4版本镜像
-    container_name: rocketmq-broker  # 容器名称
-    command: sh mqbroker -n rocketmq-nameserver:9876 autoCreateTopicEnable=true  # 启动代理并连接到名称服务器，允许自动创建主题
-    depends_on:
-      - rocketmq-nameserver  # 依赖于名称服务器，确保名称服务器先启动
+#  rocketmq-broker:
+#    image: apache/rocketmq:4.9.4  # 使用Apache RocketMQ 4.9.4版本镜像
+#    container_name: rocketmq-broker  # 容器名称
+#    command: sh mqbroker -n rocketmq-nameserver:9876 autoCreateTopicEnable=true  # 启动代理并连接到名称服务器，允许自动创建主题
+#    depends_on:
+#      - rocketmq-nameserver  # 依赖于名称服务器，确保名称服务器先启动
+#    environment:
+#      JAVA_OPTS: -Drocketmq.broker.ip=broker  # Java启动选项，设置代理IP
+#      TZ: Asia/Shanghai  # 设置时区为上海，确保时间同步
+#    ports:
+#      - "10909:10909"  # 客户端连接端口
+#      - "10911:10911"  # 生产者连接端口
+#      - "10912:10912"  # 管理端口
+#    volumes:
+#      - rocketmq_broker_data:/home/rocketmq/data  # 数据持久化
+#      - rocketmq_broker_logs:/home/rocketmq/logs  # 日志持久化
+#    restart: unless-stopped  # 容器停止时自动重启，除非手动停止
+#    networks:
+#      - emr-net  # 连接到EMR网络
+#    deploy:
+#      resources:
+#        limits:
+#          cpus: '1'  # 限制CPU使用率
+#          memory: 1.5G  # 限制内存使用
+  rabbitmq:
+    image: "bitnami/rabbitmq:latest"
+    container_name: "rabbitmq"
+    restart: "always"
     environment:
-      JAVA_OPTS: -Drocketmq.broker.ip=broker  # Java启动选项，设置代理IP
-      TZ: Asia/Shanghai  # 设置时区为上海，确保时间同步
+      - "RABBITMQ_USERNAME=admin"
+      - "RABBITMQ_PASSWORD=B21031618rabbitmq"
     ports:
-      - "10909:10909"  # 客户端连接端口
-      - "10911:10911"  # 生产者连接端口
-      - "10912:10912"  # 管理端口
+      - "5672:5672"
+      - "15672:15672"
     volumes:
-      - rocketmq_broker_data:/home/rocketmq/data  # 数据持久化
-      - rocketmq_broker_logs:/home/rocketmq/logs  # 日志持久化
-    restart: unless-stopped  # 容器停止时自动重启，除非手动停止
-    networks:
-      - emr-net  # 连接到EMR网络
+      - "rabbitmq_data:/bitnami"
     deploy:
       resources:
         limits:
           cpus: '1'  # 限制CPU使用率
-          memory: 1.5G  # 限制内存使用
+          memory: 1G  # 限制内存使用
   # MySQL数据库服务配置
   # 提供关系型数据存储，用于持久化EMR系统中的结构化数据
   mysql:
@@ -78,6 +95,10 @@ services:
     ports:
       - "8848:8848/tcp"  # 暴露Nacos服务端口
       - "9848:9848/tcp"  # 暴露Nacos集群通信端口
+    deploy:
+      resources:
+        limits:
+          memory: 1G  # 限制内存使用
 
   # Redis服务配置
   # 提供高性能的键值存储，用于缓存、会话管理和发布/订阅功能
@@ -105,6 +126,7 @@ volumes:
   rocketmq_broker_logs:   # RocketMQ消息代理日志卷，用于问题排查和监控
   mysql_data:  # MySQL数据卷
   redis_data: # Redis数据卷
+  rabbitmq_data:
 
 
 # 定义网络
