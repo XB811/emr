@@ -6,8 +6,10 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.beanutils.BeanUtils;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
+import top.xblog1.emr.framework.starter.cache.DistributedCache;
 import top.xblog1.emr.framework.starter.common.toolkit.BeanUtil;
 import top.xblog1.emr.framework.starter.convention.exception.ClientException;
 import top.xblog1.emr.framework.starter.convention.exception.ServiceException;
@@ -29,7 +31,10 @@ import top.xblog1.emr.services.evaluation.services.EvaluationServices;
 @RequiredArgsConstructor
 public class EvaluationServicesImpl implements EvaluationServices {
     private final EvaluationMapper evaluationMapper;
+    private final RabbitTemplate rabbitTemplate;
+    private final DistributedCache distributedCache;
 
+    String EVALUATION_CACHE ="emr-evaluation-service:evaluation_rating:";
     @Override
     public EvaluationCreateRespDTO create(EvaluationCreateReqDTO requestParam) {
         if(requestParam.getPatientId()==null)
@@ -41,6 +46,10 @@ public class EvaluationServicesImpl implements EvaluationServices {
         EvaluationDO evaluationDO = BeanUtil.convert(requestParam, EvaluationDO.class);
         try{
             evaluationMapper.insert(evaluationDO);
+            // 将数据存入redis
+            distributedCache.put(EVALUATION_CACHE+evaluationDO.getId(),evaluationDO);
+            //发送到消息队列
+            rabbitTemplate.convertAndSend("emr.evaluation",evaluationDO.getId());
         }catch (DuplicateKeyException ex){
             throw new ClientException("emrId重复");
         }catch (Exception ex){

@@ -21,4 +21,5 @@ public class EvaluationDO extends BaseDO {
     private Long doctorId;
     private Long emrId;
     private String content;
+    private Integer rating;
 }

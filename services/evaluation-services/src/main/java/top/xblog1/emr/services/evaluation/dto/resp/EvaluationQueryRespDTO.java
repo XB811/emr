@@ -14,6 +14,7 @@ public class EvaluationQueryRespDTO {
     private String doctorId;
     private String emrId;
     private String content;
+    private Integer rating;
     private Date createTime;
     private Date updateTime;
 }

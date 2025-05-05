@@ -23,6 +23,15 @@ spring:
         server-addr: 118.145.210.214:8848  # Nacos?????
       username: nacos  # Nacos?????
       password: B21031618nacos  # Nacos????
+  rabbitmq:
+    host: 118.145.210.214
+    port: 5672 # 端口
+    username: B21031618 # 用户名
+    password: B21031618rabbitmq # 密码
+    virtual-host: /
+    listener:
+      simple:
+        prefetch: 1 # 每次只能获取一条消息，处理完成才能获取下一个消息
 
 # MyBatis-Plus??
 mybatis-plus:
@@ -43,3 +52,9 @@ framework:
       value-timeout: 50000  # Redis??????????
       bloom-filter:
         user-register: null
+
+baidu:
+  api:
+    app-id: "118741243"
+    api-key: "FsnkwpmvAx5piCQpHQ6EyiyY"
+    secret-key: "7TwJGgtjA5e2Kc2HbD3m5gwcAX9uKkc0"
