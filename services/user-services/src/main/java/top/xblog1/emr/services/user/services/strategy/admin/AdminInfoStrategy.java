@@ -25,10 +25,7 @@ import top.xblog1.emr.services.user.common.constant.UserExecuteStrategyContant;
 import top.xblog1.emr.services.user.common.enums.UserChainMarkEnum;
 import top.xblog1.emr.services.user.dao.entity.AdminDO;
 import top.xblog1.emr.services.user.dao.mapper.AdminMapper;
-import top.xblog1.emr.services.user.dto.req.UpdatePasswordReqDTO;
-import top.xblog1.emr.services.user.dto.req.UserPageQueryReqDTO;
-import top.xblog1.emr.services.user.dto.req.UserRegisterReqDTO;
-import top.xblog1.emr.services.user.dto.req.UserUpdateReqDTO;
+import top.xblog1.emr.services.user.dto.req.*;
 import top.xblog1.emr.services.user.dto.resp.UserQueryActualRespDTO;
 import top.xblog1.emr.services.user.dto.resp.UserQueryRespDTO;
 import top.xblog1.emr.services.user.dto.strategy.BaseUserDTO;
@@ -170,4 +167,22 @@ public class AdminInfoStrategy extends AbstractUserExecuteStrategy {
                 .build();
 
     }
+     public void resetPassword(BaseUserDTO request){
+         UserResetPasswordReqDTO requestParam = request.getUserResetPasswordReqDTO();
+         //先查数据库拿到用户信息
+         LambdaQueryWrapper<AdminDO> queryWrapper = Wrappers.lambdaQuery(AdminDO.class)
+                 .eq(AdminDO::getPhone,requestParam.getPhone());
+         AdminDO adminDO = adminMapper.selectOne(queryWrapper);
+         if(adminDO==null){
+             throw new ClientException("该用户不存在");
+         }
+         //再查缓存拿到验证码
+         String cacheCode = distributedCache.get(USER_LOGIN_PHONE_VERIFY_CODE_PREFIX + UserTypeEnum.ADMIN.code()+':'+requestParam.getPhone()    , String.class);
+         //如果验证码不同
+         if(cacheCode.isEmpty() || !cacheCode.equals(requestParam.getCode()))
+             throw new ClientException("验证码错误");
+         //如果相同，更新密码
+         adminDO.setPassword(PasswordEncryptUtil.encryptPassword(requestParam.getPassword()));
+         adminMapper.updateById(adminDO);
+     }
 }

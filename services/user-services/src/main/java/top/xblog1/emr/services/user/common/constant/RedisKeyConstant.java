@@ -38,4 +38,7 @@ public final class RedisKeyConstant {
     public static final String USER_LOGIN_ADMIN_TOKEN_PREFIX ="emr-user-service:user_login:token:admin:";
     public static final String USER_LOGIN_DOCTOR_TOKEN_PREFIX="emr-user-service:user_login:token:doctor:";
     public static final String USER_LOGIN_PATIEN_TOKEN_PREFIX ="emr-user-service:user_login:token:patient:";
+
+
+    public static final String USER_LOGIN_PHONE_VERIFY_CODE_PREFIX ="emr-user-service:user_login:verify_code:";
 }

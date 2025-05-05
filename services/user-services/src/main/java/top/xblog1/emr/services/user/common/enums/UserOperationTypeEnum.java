@@ -24,6 +24,7 @@ public enum UserOperationTypeEnum {
     USER_PASSWORD_UPDATE("updatePassword","更新当前登录用户密码"),
     USER_PAGE_QUERY("pageQuery","分页查询"),
     USER_QUERY_ALL("queryAll","查询所有用户"),
+    USER_RESET_PASSWORD("resetPassword","使用手机号重置密码"),
     ;
     private final String code;
     private final String desc;

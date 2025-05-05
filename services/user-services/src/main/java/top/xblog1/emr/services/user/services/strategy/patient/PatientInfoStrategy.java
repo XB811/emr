@@ -18,12 +18,14 @@ import top.xblog1.emr.framework.starter.convention.page.PageResponse;
 import top.xblog1.emr.framework.starter.database.toolkit.PageUtil;
 import top.xblog1.emr.framework.starter.user.core.UserContext;
 import top.xblog1.emr.services.user.common.constant.UserExecuteStrategyContant;
+import top.xblog1.emr.services.user.dao.entity.AdminDO;
 import top.xblog1.emr.services.user.dao.entity.PatientDO;
 import top.xblog1.emr.services.user.dao.entity.PatientPhoneReuseDO;
 import top.xblog1.emr.services.user.dao.mapper.PatientMapper;
 import top.xblog1.emr.services.user.dao.mapper.PatientPhoneReuseMapper;
 import top.xblog1.emr.services.user.dto.req.UpdatePasswordReqDTO;
 import top.xblog1.emr.services.user.dto.req.UserPageQueryReqDTO;
+import top.xblog1.emr.services.user.dto.req.UserResetPasswordReqDTO;
 import top.xblog1.emr.services.user.dto.req.UserUpdateReqDTO;
 import top.xblog1.emr.services.user.dto.resp.UserQueryActualRespDTO;
 import top.xblog1.emr.services.user.dto.resp.UserQueryRespDTO;
@@ -36,6 +38,7 @@ import java.util.Arrays;
 import java.util.Objects;
 
 import static top.xblog1.emr.services.user.common.constant.RedisKeyConstant.PATIENT_REGISTER_PHONE_REUSE_SHARDING;
+import static top.xblog1.emr.services.user.common.constant.RedisKeyConstant.USER_LOGIN_PHONE_VERIFY_CODE_PREFIX;
 import static top.xblog1.emr.services.user.common.enums.UserRegisterErrorCodeEnum.HAS_PHONE;
 import static top.xblog1.emr.services.user.toolkit.UserReuseUtil.hashShardingIdx;
 
@@ -183,5 +186,23 @@ public class PatientInfoStrategy extends AbstractUserExecuteStrategy {
                 .userPageQueryRespDTO(response)
                 .build();
 
+    }
+    public void resetPassword(BaseUserDTO request){
+        UserResetPasswordReqDTO requestParam = request.getUserResetPasswordReqDTO();
+        //先查数据库拿到用户信息
+        LambdaQueryWrapper<PatientDO> queryWrapper = Wrappers.lambdaQuery(PatientDO.class)
+                .eq(PatientDO::getPhone,requestParam.getPhone());
+        PatientDO patientDO = patientMapper.selectOne(queryWrapper);
+        if(patientDO==null){
+            throw new ClientException("该用户不存在");
+        }
+        //再查缓存拿到验证码
+        String cacheCode = distributedCache.get(USER_LOGIN_PHONE_VERIFY_CODE_PREFIX + UserTypeEnum.PATIENT.code(), String.class);
+        //如果验证码不同
+        if(!cacheCode.equals(requestParam.getCode()))
+            throw new ClientException("验证码错误");
+        //如果相同，更新密码
+        patientDO.setPassword(PasswordEncryptUtil.encryptPassword(requestParam.getPassword()));
+        patientMapper.updateById(patientDO);
     }
 }

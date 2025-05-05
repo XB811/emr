@@ -62,4 +62,6 @@ public interface UserLoginService {
     void logout(String accessToken, @NotEmpty String userType);
 
     UserInfoQueryByTokenRespDTO getUserInfoByToken(@NotEmpty String token);
+
+    void getVerifyCode(@Valid String phone, @NotEmpty String userType);
 }

@@ -133,8 +133,26 @@ public class UserInfoController {
         return Results.success(userService.pageQuery(requestParam,userType));
         
     }
+    /**
+    * 查询某类所有用户
+    * @param userType
+    * @return Result<List<UserQueryRespDTO>>
+    */
     @GetMapping("/v1/queryAll/{userType}")
     public Result<List<UserQueryRespDTO>> queryAllUser(@PathVariable @NotEmpty String userType) {
         return Results.success(userService.queryAll(userType));
+    }
+
+    /**
+    * 重置密码
+    * @param requestParam 
+     * @param userType 
+    * @return Result<Void> 
+    */
+    @PutMapping("/v1/resetPassword/{userType}")
+    public Result<Void> resetPassword(@RequestBody @Valid UserResetPasswordReqDTO requestParam,
+                                      @PathVariable @NotEmpty String userType){
+        userService.resetPassword(requestParam,userType);
+        return Results.success();
     }
 }

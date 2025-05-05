@@ -1,19 +1,20 @@
 package top.xblog1.emr.services.user.services.impl;
 
+import cn.hutool.core.lang.Validator;
+import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson2.JSON;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import top.xblog1.emr.framework.starter.cache.DistributedCache;
-import top.xblog1.emr.framework.starter.common.toolkit.BeanUtil;
 import top.xblog1.emr.framework.starter.convention.exception.ClientException;
 import top.xblog1.emr.framework.starter.designpattern.strategy.AbstractStrategyChoose;
-import top.xblog1.emr.framework.starter.user.core.UserContext;
 import top.xblog1.emr.framework.starter.user.core.UserInfoDTO;
-import top.xblog1.emr.framework.starter.user.toolkit.JWTUtil;
 import top.xblog1.emr.services.user.common.enums.UserOperationTypeEnum;
+import top.xblog1.emr.services.user.common.enums.UserRegisterErrorCodeEnum;
 import top.xblog1.emr.services.user.dto.req.UserDeletionReqDTO;
 import top.xblog1.emr.services.user.dto.req.UserLoginReqDTO;
 import top.xblog1.emr.services.user.dto.req.UserRegisterReqDTO;
@@ -22,7 +23,11 @@ import top.xblog1.emr.services.user.dto.resp.UserLoginRespDTO;
 import top.xblog1.emr.services.user.dto.resp.UserRegisterRespDTO;
 import top.xblog1.emr.services.user.dto.strategy.BaseUserDTO;
 import top.xblog1.emr.services.user.services.UserLoginService;
+import top.xblog1.emr.services.user.toolkit.SmsUtil;
 
+import java.util.concurrent.TimeUnit;
+
+import static top.xblog1.emr.services.user.common.constant.RedisKeyConstant.USER_LOGIN_PHONE_VERIFY_CODE_PREFIX;
 import static top.xblog1.emr.services.user.common.constant.RedisKeyConstant.USER_LOGIN_TOKEN_PREFIX;
 import static top.xblog1.emr.services.user.common.constant.UserExecuteStrategyContant.USER_LOGIN_STRATEGY_SUFFIX;
 import static top.xblog1.emr.services.user.common.enums.UserErrorCodeEnum.ILLEGAL_TOKE;
@@ -164,5 +169,31 @@ public class UserLoginServiceImpl implements UserLoginService {
         String s = stringRedisTemplate.opsForValue().get(token);
         return JSON.parseObject(s,UserInfoQueryByTokenRespDTO.class);
 //        return BeanUtil.convert(distributedCache.get(token, UserInfoDTO.class), UserInfoQueryByTokenRespDTO.class);
+    }
+
+    @Override
+    public void getVerifyCode(@Valid String phone, @NotEmpty String userType) {
+        if(StrUtil.isBlank(phone)) {
+            throw new ClientException("手机号不能为空");
+        }
+        if(!Validator.isMobile(phone))
+            throw new ClientException(UserRegisterErrorCodeEnum.PHONE_PATTERN_ERROR);
+        if(StrUtil.isBlank(userType)) {
+            throw new ClientException("用户类型不能为空");
+        }
+        if(!userType.equals("admin")&&!userType.equals("doctor")&&!userType.equals("patient")){
+            throw new ClientException("用户类型错误");
+        }
+        //先从缓存获取验证码，如果存在，直接返回
+        String code = distributedCache.get(USER_LOGIN_PHONE_VERIFY_CODE_PREFIX + userType+':'+phone, String.class);
+        if(code!=null) {
+            return;
+        }
+        //生成6位随机验证码
+        code = RandomUtil.randomNumbers(6);
+        //将验证码存入缓存中，并设置10分钟时长
+        distributedCache.put(USER_LOGIN_PHONE_VERIFY_CODE_PREFIX + userType+":"+phone, code,10, TimeUnit.MINUTES);
+        //发送验证码
+        SmsUtil.sendSms(phone,code);
     }
 }

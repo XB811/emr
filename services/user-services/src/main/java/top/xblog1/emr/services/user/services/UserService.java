@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotEmpty;
 import top.xblog1.emr.framework.starter.convention.page.PageResponse;
 import top.xblog1.emr.services.user.dto.req.UpdatePasswordReqDTO;
 import top.xblog1.emr.services.user.dto.req.UserPageQueryReqDTO;
+import top.xblog1.emr.services.user.dto.req.UserResetPasswordReqDTO;
 import top.xblog1.emr.services.user.dto.req.UserUpdateReqDTO;
 import top.xblog1.emr.services.user.dto.resp.UserQueryActualRespDTO;
 import top.xblog1.emr.services.user.dto.resp.UserQueryRespDTO;
@@ -44,4 +45,6 @@ public interface UserService {
     PageResponse<UserQueryRespDTO> pageQuery(@Valid UserPageQueryReqDTO requestParam, @NotEmpty String userType);
 
     List<UserQueryRespDTO> queryAll(@NotEmpty String userType);
+
+    void resetPassword(@Valid UserResetPasswordReqDTO requestParam, @NotEmpty String userType);
 }

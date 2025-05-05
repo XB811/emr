@@ -36,6 +36,8 @@ public class BaseUserDTO {
     private UserPageQueryReqDTO userPageQueryReqDTO;
     private PageResponse<UserQueryRespDTO> userPageQueryRespDTO;
     private List<UserQueryRespDTO> userQueryRespDTOList;
+
+    private UserResetPasswordReqDTO userResetPasswordReqDTO;
     //用户id
     private Long id;
     //用户名

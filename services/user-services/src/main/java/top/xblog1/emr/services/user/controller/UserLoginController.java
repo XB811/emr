@@ -1,5 +1,6 @@
 package top.xblog1.emr.services.user.controller;
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -47,6 +48,19 @@ public class UserLoginController {
     public Result<Void> logout(@RequestParam(required = false) String accessToken,
                                 @PathVariable @NotEmpty String userType) {
         userLoginService.logout(accessToken,userType);
+        return Results.success();
+    }
+
+    /**
+    * 获取短信验证码
+    * @param phone 
+     * @param userType 
+    * @return Result<Void> 
+    */
+    @GetMapping("/v1/getVerifyCode/{userType}")
+    public Result<Void> getVerifyCode(@Valid String phone,
+                                        @PathVariable @NotEmpty String userType) {
+        userLoginService.getVerifyCode(phone,userType);
         return Results.success();
     }
 }
