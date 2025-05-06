@@ -26,4 +26,6 @@ public interface EvaluationServices {
     PageResponse<EvaluationQueryRespDTO> pageQuery(EvaluationPageQueryReqDTO requestParam);
 
     Boolean hasEvaluation(String emrId);
+
+    Double getAverageRating(String doctorId);
 }

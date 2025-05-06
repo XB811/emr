@@ -89,4 +89,14 @@ public class EvaluationController {
     public Result<Boolean> hasEvaluation(@PathVariable String emrId){
         return Results.success(evaluationServices.hasEvaluation(emrId));
     }
+
+    /**
+    * 查询医生的平均分
+    * @param doctorId 
+    * @return Result<Double> 
+    */
+    @GetMapping("/v1/getAverageRating/{doctorId}")
+    public Result<Double> getAverageRating(@PathVariable String doctorId){
+        return Results.success(evaluationServices.getAverageRating(doctorId));
+    }
 }

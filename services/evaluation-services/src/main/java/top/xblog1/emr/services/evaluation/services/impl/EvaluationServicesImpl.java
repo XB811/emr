@@ -15,7 +15,9 @@ import top.xblog1.emr.framework.starter.convention.exception.ClientException;
 import top.xblog1.emr.framework.starter.convention.exception.ServiceException;
 import top.xblog1.emr.framework.starter.convention.page.PageResponse;
 import top.xblog1.emr.framework.starter.database.toolkit.PageUtil;
+import top.xblog1.emr.services.evaluation.dao.entity.DoctorRatingDO;
 import top.xblog1.emr.services.evaluation.dao.entity.EvaluationDO;
+import top.xblog1.emr.services.evaluation.dao.mapper.DoctorRatingMapper;
 import top.xblog1.emr.services.evaluation.dao.mapper.EvaluationMapper;
 import top.xblog1.emr.services.evaluation.dto.req.EvaluationCreateReqDTO;
 import top.xblog1.emr.services.evaluation.dto.req.EvaluationPageQueryReqDTO;
@@ -33,6 +35,7 @@ public class EvaluationServicesImpl implements EvaluationServices {
     private final EvaluationMapper evaluationMapper;
     private final RabbitTemplate rabbitTemplate;
     private final DistributedCache distributedCache;
+    private final DoctorRatingMapper   doctorRatingMapper;
 
     String EVALUATION_CACHE ="emr-evaluation-service:evaluation_rating:";
     @Override
@@ -119,5 +122,17 @@ public class EvaluationServicesImpl implements EvaluationServices {
         if(evaluationMapper.selectCount(queryWrapper)>0)
             return true;
         return false;
+    }
+
+    @Override
+    public Double getAverageRating(String doctorId) {
+        LambdaQueryWrapper<DoctorRatingDO> queryWrapper = Wrappers.lambdaQuery(DoctorRatingDO.class)
+                .eq(DoctorRatingDO::getDoctorId,doctorId);
+        //查询数据库
+        DoctorRatingDO doctorRatingDO = doctorRatingMapper.selectOne(queryWrapper);
+        if(doctorRatingDO!=null){
+            return doctorRatingDO.getAverageRating();
+        }
+        return -1.0;
     }
 }
