@@ -37,6 +37,7 @@ import top.xblog1.emr.services.user.dto.resp.UserRegisterRespDTO;
 import top.xblog1.emr.services.user.dto.strategy.BaseUserDTO;
 import top.xblog1.emr.services.user.services.strategy.AbstractUserExecuteStrategy;
 import top.xblog1.emr.services.user.toolkit.PasswordEncryptUtil;
+import top.xblog1.emr.services.user.toolkit.SessionIdUtil;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;
@@ -214,7 +215,9 @@ public class PatientLoginStrategy extends AbstractUserExecuteStrategy {
                 .realName(patientDO.getRealName())
                 .userType(UserTypeEnum.PATIENT.code())
                 .build();
-        String accessToken = JWTUtil.generateAccessToken(userInfoDTO);
+        // String accessToken = JWTUtil.generateAccessToken(userInfoDTO);
+        //更换token生成方式
+        String accessToken = SessionIdUtil.generateAccessToken(userInfoDTO);
         UserLoginRespDTO actual = UserLoginRespDTO.builder()
                 .userId(userInfoDTO.getUserId())
                 .username(userInfoDTO.getUsername())
